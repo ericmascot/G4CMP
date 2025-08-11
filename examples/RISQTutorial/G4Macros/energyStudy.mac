@@ -1,0 +1,28 @@
+/g4cmp/HitsFile mu-_1-1000MeV_0_-1_-1.txt
+/run/initialize
+/tracking/verbose 0
+/run/printProgress 10
+
+/g4cmp/produceCharges 1.
+/g4cmp/producePhonons 0.
+/g4cmp/sampleLuke 0.
+/g4cmp/phononBounces 0
+/g4cmp/chargeBounces 1000
+
+# Generate muon coming in at 45 deg angle at the center of the top surface
+/gps/number 1
+/gps/particle mu-
+/gps/pos/type Point
+/gps/direction 0 -1  -1
+/gps/pos/centre 0 10 15 mm # A bit above the chip top (top of chip is 5 mm)
+
+#Select energies
+#/gps/ene/mono 4 GeV
+/gps/ene/type Lin
+/gps/ene/min 1 MeV
+/gps/ene/max 1 GeV
+# Linear distribution with gradient 0 -> uniform distribution
+/gps/ene/intercept 1
+/gps/ene/gradient 0
+
+/run/beamOn 100
