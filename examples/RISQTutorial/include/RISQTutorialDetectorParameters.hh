@@ -29,9 +29,9 @@ namespace RISQTutorialDetectorParameters
   
   //----------------------------------------------------------------
   //Silicon chip dimensions
-  constexpr double dp_siliconChipDimX = 8.0 * CLHEP::mm;
-  constexpr double dp_siliconChipDimY = 8.0 * CLHEP::mm;
-  constexpr double dp_siliconChipDimZ = 0.381 * CLHEP::mm;
+  constexpr double dp_siliconChipDimX = 10.0 * CLHEP::mm;
+  constexpr double dp_siliconChipDimY = 10.0 * CLHEP::mm;
+  constexpr double dp_siliconChipDimZ = 0.5 * CLHEP::mm;
 
 
   //----------------------------------------------------------------
