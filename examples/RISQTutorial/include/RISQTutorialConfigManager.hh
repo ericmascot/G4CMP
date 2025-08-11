@@ -29,16 +29,20 @@ public:
   // Access current values
   static const G4String& GetHitOutput()  { return Instance()->Hit_file; }
   static const G4String& GetPrimaryOutput()  { return Instance()->Primary_file; }
+  static G4double GetQAbsProb() { return Instance()->qAbsProb; }
+  static G4double GetQReflProb() { return Instance()->qReflProb; }
 
   // Change values (e.g., via Messenger)
   static void SetHitOutput(const G4String& name)
     { Instance()->Hit_file=name; UpdateGeometry(); }
-
-  // Change values (e.g., via Messenger)
   static void SetPrimaryOutput(const G4String& name)
     { Instance()->Hit_file=name; UpdateGeometry(); }
+  static void SetQAbsProb(G4double value)
+    { Instance()->qAbsProb=value; UpdateGeometry(); }
+  static void SetQReflProb(G4double value)
+    { Instance()->qReflProb=value; UpdateGeometry(); }
 
-  
+
   static void UpdateGeometry();
 
 private:
@@ -53,6 +57,8 @@ private:
 private:
   G4String Hit_file;	// Output file of e/h hits ($G4CMP_HIT_FILE)
   G4String Primary_file;	// Output file of primaries
+  G4double qAbsProb; // Absorption probability
+  G4double qReflProb; // Reflection probability
 
   RISQTutorialConfigMessenger* messenger;
 };

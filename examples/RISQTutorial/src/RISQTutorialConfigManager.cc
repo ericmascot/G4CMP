@@ -31,6 +31,8 @@ RISQTutorialConfigManager* RISQTutorialConfigManager::Instance() {
 RISQTutorialConfigManager::RISQTutorialConfigManager()
   : Hit_file(getenv("G4CMP_HIT_FILE")?getenv("G4CMP_HIT_FILE"):"RISQTutorial_hits.txt"),
     Primary_file("RISQTutorial_primary.txt"),
+    qAbsProb(1.),
+    qReflProb(0.),
     messenger(new RISQTutorialConfigMessenger(this)) {;}
 
 RISQTutorialConfigManager::~RISQTutorialConfigManager() {

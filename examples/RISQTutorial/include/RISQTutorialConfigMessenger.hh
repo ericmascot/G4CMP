@@ -17,6 +17,7 @@
 #include "G4UImessenger.hh"
 
 class RISQTutorialConfigManager;
+class G4UIcmdWithADouble;
 class G4UIcmdWithAString;
 class G4UIcommand;
 
@@ -31,6 +32,8 @@ public:
 private:
   RISQTutorialConfigManager* theManager;
   G4UIcmdWithAString* hitsCmd;
+  G4UIcmdWithADouble* qAbsProbCmd;
+  G4UIcmdWithADouble* qReflProbCmd;
 
 private:
   RISQTutorialConfigMessenger(const RISQTutorialConfigMessenger&);	// Copying is forbidden
