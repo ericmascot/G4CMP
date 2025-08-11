@@ -10,6 +10,8 @@
 #include "G4PhononLong.hh"
 #include "G4PhononTransFast.hh"
 #include "G4PhononTransSlow.hh"
+#include "G4CMPDriftElectron.hh"
+#include "G4CMPDriftHole.hh"
 #include "G4Run.hh"
 #include "G4RunManager.hh"
 #include "G4SDManager.hh"
@@ -59,10 +61,10 @@ void RISQTutorialSensitivity::EndOfEvent(G4HCofThisEvent* HCE) {
 		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetZ0()/mm << " "
 		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetT0()/ns << "\n";
   }
-      
-    
+
+
   // Do hit output writing to file
-  if (hitOutput.good()) {    
+  if (hitOutput.good()) {
     for (G4CMPElectrodeHit* hit : *hitVec) {
       hitOutput << runMan->GetCurrentRun()->GetRunID() << ' '
                 << runMan->GetCurrentEvent()->GetEventID() << ' '
@@ -126,33 +128,36 @@ void RISQTutorialSensitivity::SetPrimaryOutputFile(const G4String &fn) {
 G4bool RISQTutorialSensitivity::IsHit(const G4Step* step,
                                 const G4TouchableHistory*) const
 {
-  
+
   //Establish track/step information
   const G4Track* track = step->GetTrack();
   const G4StepPoint* postStepPoint = step->GetPostStepPoint();
   const G4ParticleDefinition* particle = track->GetDefinition();
 
   //-------------------------------------------------------------------
-  //Set criteion for what counts as a "hit" that should be recorded.
+  //Set criterion for what counts as a "hit" that should be recorded.
   bool selectTargetVolumes = false;
 
   //Option one: a phonon that is stopped and killed at a boundary with a
   //nonzero energy deposition.
-  G4bool correctParticle = particle == G4PhononLong::Definition() ||
-                           particle == G4PhononTransFast::Definition() ||
-                           particle == G4PhononTransSlow::Definition();
-  
-  G4bool correctStatus = step->GetTrack()->GetTrackStatus() == fStopAndKill &&
-                         postStepPoint->GetStepStatus() == fGeomBoundary &&
-                         step->GetNonIonizingEnergyDeposit() > 0.;
+  // G4bool correctParticle = particle == G4PhononLong::Definition() ||
+  //                          particle == G4PhononTransFast::Definition() ||
+  //                          particle == G4PhononTransSlow::Definition();
+  G4bool correctParticle = particle == G4CMPDriftElectron::Definition() ||
+                           particle == G4CMPDriftHole::Definition();
 
+  // G4bool correctStatus = step->GetTrack()->GetTrackStatus() == fStopAndKill &&
+  //                        postStepPoint->GetStepStatus() == fGeomBoundary &&
+  //                        step->GetNonIonizingEnergyDeposit() > 0.;
+  G4bool correctStatus = step->GetTrack()->GetTrackStatus() == fStopAndKill;
+  
   G4bool landedOnTargetSurface = (postStepPoint->GetPhysicalVolume()->GetName().find("shuntConductor") != std::string::npos);
 
   //Now select which critera matter:
   //Option one: a phonon that is stopped and killed at a boundary with a
-  //nonzero energy deposition.  
+  //nonzero energy deposition.
   if( !selectTargetVolumes ){ return correctParticle && correctStatus; }
-    
+
   //Option two: a phonon that satisfies all of the above things, but also landed in a specific
   //volume name. Here, we're looking for a volume that contains the words "shuntConductor", which
   //in this tutorial's geometry is one of the qubit crosses. (Can also just put this info in
