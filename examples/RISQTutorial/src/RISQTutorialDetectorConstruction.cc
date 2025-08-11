@@ -12,6 +12,7 @@
 // 20211207  Replace G4Logical*Surface with G4CMP-specific versions.
 // 20220809  [ For M. Hui ] -- Add frequency dependent surface properties.
 
+#include "RISQTutorialConfigManager.hh"
 #include "RISQTutorialDetectorConstruction.hh"
 #include "RISQTutorialSensitivity.hh"
 #include "RISQTutorialQubitHousing.hh"
@@ -55,7 +56,7 @@ using namespace RISQTutorialDetectorParameters;
 
 RISQTutorialDetectorConstruction::RISQTutorialDetectorConstruction()
   : fLiquidHelium(0), fGermanium(0), fAluminum(0), fTungsten(0),
-    fWorldPhys(0), 
+    fWorldPhys(0),
     fSuperconductorSensitivity(0), fConstructed(false) {;}//, fIfField(true) {;}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -91,7 +92,7 @@ G4VPhysicalVolume* RISQTutorialDetectorConstruction::Construct()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void RISQTutorialDetectorConstruction::DefineMaterials()
-{ 
+{
   G4NistManager* nistManager = G4NistManager::Instance();
 
   fLiquidHelium = nistManager->FindOrBuildMaterial("G4_AIR"); // to be corrected
@@ -113,7 +114,7 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
   //---------------------------------------------------------------------------------------------------------------------
   //---------------------------------------------------------------------------------------------------------------------
   // First, define border surface properties that can be referenced later
-  const G4double GHz = 1e9 * hertz; 
+  const G4double GHz = 1e9 * hertz;
 
   //the following coefficients and cutoff values are not well-motivated
   //the code below is used only to demonstrate how to set these values.
@@ -121,26 +122,29 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
   const std::vector<G4double> diffCoeffs = {1,0,0,0,0,0};//Explicitly make this 1 for now
   const std::vector<G4double> specCoeffs = {0,0,0,0,0,0};//Turn this off temporarily
   const G4double anhCutoff = 520., reflCutoff = 350.;   // Units external
-    
-  
+
+
   //These are just the definitions of the interface TYPES, not the interfaces themselves. These must be called in a set of loops
   //below, and invoke these surface definitions.
   if( !fConstructed ){
+    G4double qAbsProb = RISQTutorialConfigManager::GetQAbsProb();
+    G4double qReflProb = RISQTutorialConfigManager::GetQReflProb();
+    std::cout << "Absorption and reflection probabilities: " << qAbsProb << ", " << qReflProb << std::endl;
     fSiNbInterface = new G4CMPSurfaceProperty("SiNbInterface",
-					      1.0, 0.0, 0.0, 0.0,
+					      qAbsProb, qReflProb, 0.0, 0.0,
 					      0.1, 1.0, 0.0, 0.0);
     fSiCopperInterface = new G4CMPSurfaceProperty("SiCopperInterface",
-						  1.0, 0.0, 0.0, 0.0,
+						  qAbsProb, qReflProb, 0.0, 0.0,
 						  1.0, 0.0, 0.0, 0.0 );
     fSiVacuumInterface = new G4CMPSurfaceProperty("SiVacuumInterface",
 						  0.0, 1.0, 0.0, 0.0,
 						  0.0, 1.0, 0.0, 0.0 );
-    
+
 
     fSiNbInterface->AddScatteringProperties(anhCutoff, reflCutoff, anhCoeffs,
-					    diffCoeffs, specCoeffs, GHz, GHz, GHz);  
+					    diffCoeffs, specCoeffs, GHz, GHz, GHz);
     fSiCopperInterface->AddScatteringProperties(anhCutoff, reflCutoff, anhCoeffs,
-						diffCoeffs, specCoeffs, GHz, GHz, GHz);  
+						diffCoeffs, specCoeffs, GHz, GHz, GHz);
     fSiVacuumInterface->AddScatteringProperties(anhCutoff, reflCutoff, anhCoeffs,
 						diffCoeffs, specCoeffs, GHz, GHz, GHz);
 
@@ -165,8 +169,8 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
 
   //---------------------------------------------------------------------------------------------------------------------
   //---------------------------------------------------------------------------------------------------------------------
-  // Now we start constructing the various components and their interfaces  
-  //     
+  // Now we start constructing the various components and their interfaces
+  //
   // World
   //
   G4VSolid* solid_world = new G4Box("World",55.*cm,55.*cm,55.*cm);
@@ -180,11 +184,11 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
 				 0,
                                  false,
 				 0);
-  
-  
+
+
   bool checkOverlaps = true;
 
-  
+
 
 
 
@@ -195,18 +199,18 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
 					0.5*dp_siliconChipDimX,
 					0.5*dp_siliconChipDimY,
 					0.5*dp_siliconChipDimZ);
-  
+
   //Now attribute a physical material to the chip
   G4LogicalVolume * log_siliconChip = new G4LogicalVolume(solid_siliconChip,
 							  fSilicon,
 							  "SiliconChip_log");
-    
+
   //Now, create a physical volume and G4PVPlacement for storing as the final output
-  G4ThreeVector siliconChipTranslate(0,0,0.5*(dp_housingDimZ - dp_siliconChipDimZ) + dp_eps); 
+  G4ThreeVector siliconChipTranslate(0,0,0.5*(dp_housingDimZ - dp_siliconChipDimZ) + dp_eps);
   G4VPhysicalVolume * phys_siliconChip = new G4PVPlacement(0,
 							   siliconChipTranslate,
 							   log_siliconChip,
-							   "SiliconChip", 
+							   "SiliconChip",
 							   log_world,
 							   false,
 							   0,
@@ -222,24 +226,24 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
   // G4LatticeManager gives physics processes access to lattices by volume
   G4LatticeManager* LM = G4LatticeManager::GetLatticeManager();
   G4LatticeLogical* log_siliconLattice = LM->LoadLattice(fSilicon, "Si");
-    
+
   // G4LatticePhysical assigns G4LatticeLogical a physical orientation
   G4LatticePhysical* phys_siliconLattice = new G4LatticePhysical(log_siliconLattice);
-  phys_siliconLattice->SetMillerOrientation(1,0,0); 
+  phys_siliconLattice->SetMillerOrientation(1,0,0);
   LM->RegisterLattice(phys_siliconChip,phys_siliconLattice);
 
   //Set up border surfaces
   G4CMPLogicalBorderSurface * border_siliconChip_world = new G4CMPLogicalBorderSurface("border_siliconChip_world", phys_siliconChip, fWorldPhys, fSiVacuumInterface);
 
-    
+
 
 
 
   //-------------------------------------------------------------------------------------------------------------------
   //If desired, set up the copper qubit housing
   if( dp_useQubitHousing ){
-      
-      
+
+
     RISQTutorialQubitHousing * qubitHousing = new RISQTutorialQubitHousing(0,
 									   G4ThreeVector(0,0,0),
 									   "QubitHousing",
@@ -249,59 +253,59 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
 									   checkOverlaps);
     G4LogicalVolume * log_qubitHousing = qubitHousing->GetLogicalVolume();
     G4VPhysicalVolume * phys_qubitHousing = qubitHousing->GetPhysicalVolume();
-    
+
     //Set up the logical border surface
     G4CMPLogicalBorderSurface * border_siliconChip_qubitHousing = new G4CMPLogicalBorderSurface("border_siliconChip_qubitHousing", phys_siliconChip, phys_qubitHousing, fSiCopperInterface);
   }
-    
 
 
-    
+
+
 
   //-------------------------------------------------------------------------------------------------------------------
   //Now set up the ground plane, in which the transmission line, resonators, and qubits will be located.
   if( dp_useGroundPlane ){
-    
-    
+
+
     G4Box * solid_groundPlane = new G4Box("GroundPlane_solid",
 					  0.5*dp_groundPlaneDimX,
 					  0.5*dp_groundPlaneDimY,
 					  0.5*dp_groundPlaneDimZ);
-    
-    
+
+
     //Now attribute a physical material to the chip
     G4LogicalVolume * log_groundPlane = new G4LogicalVolume(solid_groundPlane,
 							    fNiobium,
 							    "GroundPlane_log");
-    
-    
+
+
     //Now, create a physical volume and G4PVPlacement for storing as the final output
     G4ThreeVector groundPlaneTranslate(0,0,0.5*(dp_housingDimZ) + dp_eps + dp_groundPlaneDimZ*0.5);
     G4VPhysicalVolume * phys_groundPlane = new G4PVPlacement(0,
 							     groundPlaneTranslate,
 							     log_groundPlane,
-							     "GroundPlane", 
+							     "GroundPlane",
 							     log_world,
 							     false,
 							     0,
 							     checkOverlaps);
-    
+
     G4VisAttributes* groundPlaneVisAtt= new G4VisAttributes(G4Colour(0.0,1.0,1.0,0.5));
     groundPlaneVisAtt->SetVisibility(true);
     log_groundPlane->SetVisAttributes(groundPlaneVisAtt);
-    
-    
+
+
     //Set up the logical border surface
     G4CMPLogicalBorderSurface * border_siliconChip_groundPlane = new G4CMPLogicalBorderSurface("border_siliconChip_groundPlane", phys_siliconChip, phys_groundPlane, fSiNbInterface);
 
 
-    
+
 
     //-------------------------------------------------------------------------------------------------------------------
     //Now set up the transmission line
     if( dp_useTransmissionLine ){
-	
-      G4ThreeVector transmissionLineTranslate(0,0,0.0);//Since it's within the ground plane exactly; 0.5*(dp_housingDimZ) + dp_eps + dp_groundPlaneDimZ*0.5 ); 
+
+      G4ThreeVector transmissionLineTranslate(0,0,0.0);//Since it's within the ground plane exactly; 0.5*(dp_housingDimZ) + dp_eps + dp_groundPlaneDimZ*0.5 );
       RISQTutorialTransmissionLine * tLine = new RISQTutorialTransmissionLine(0,
 									      transmissionLineTranslate,
 									      "TransmissionLine",
@@ -321,7 +325,7 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
       for( int iSubVol = 0; iSubVol < tLine->GetListOfAllFundamentalSubVolumes().size(); ++iSubVol){
 	std::cout << "TLine sub volume names (to be used for boundaries): " << std::get<1>(tLine->GetListOfAllFundamentalSubVolumes()[iSubVol]) << " with material " << std::get<0>(tLine->GetListOfAllFundamentalSubVolumes()[iSubVol]) << std::endl;
 
-	std::string tempName = "border_siliconChip_" + std::get<1>(tLine->GetListOfAllFundamentalSubVolumes()[iSubVol]);	  
+	std::string tempName = "border_siliconChip_" + std::get<1>(tLine->GetListOfAllFundamentalSubVolumes()[iSubVol]);
 	if( std::get<0>(tLine->GetListOfAllFundamentalSubVolumes()[iSubVol]).find("Vacuum") != std::string::npos ){
 	  G4CMPLogicalBorderSurface * border_siliconChip_transmissionLineEmpty = new G4CMPLogicalBorderSurface(tempName, phys_siliconChip, std::get<2>(tLine->GetListOfAllFundamentalSubVolumes()[iSubVol]), fSiVacuumInterface);
 	}
@@ -337,7 +341,7 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
     if( dp_useResonatorAssembly ){
       int nR = 6;
       for( int iR = 0; iR < nR; ++iR ){
-      
+
 	//First, get the translation vector for the resonator assembly
 	//For the top three, don't do a rotation. For the bottom three, do
 	G4ThreeVector resonatorAssemblyTranslate(0,0,0);
@@ -355,7 +359,7 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
 	  rotAssembly = new G4RotationMatrix();
 	  rotAssembly->rotateZ(180*deg);
 	}
-	
+
 	char name[400];
 	sprintf(name,"ResonatorAssembly_%d",iR);
 	G4String resonatorAssemblyName(name);
@@ -368,13 +372,13 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
 											      checkOverlaps);
 	G4LogicalVolume * log_resonatorAssembly = resonatorAssembly->GetLogicalVolume();
 	G4VPhysicalVolume * phys_resonatorAssembly = resonatorAssembly->GetPhysicalVolume();
-	
-	
+
+
 	//Do the logical border creation now
 	for( int iSubVol = 0; iSubVol < resonatorAssembly->GetListOfAllFundamentalSubVolumes().size(); ++iSubVol){
 	  std::cout << "TLine sub volume names (to be used for boundaries): " << std::get<1>(resonatorAssembly->GetListOfAllFundamentalSubVolumes()[iSubVol]) << " with material " << std::get<0>(resonatorAssembly->GetListOfAllFundamentalSubVolumes()[iSubVol]) << std::endl;
-	  
-	  std::string tempName = "border_siliconChip_" + std::get<1>(resonatorAssembly->GetListOfAllFundamentalSubVolumes()[iSubVol]);	  
+
+	  std::string tempName = "border_siliconChip_" + std::get<1>(resonatorAssembly->GetListOfAllFundamentalSubVolumes()[iSubVol]);
 	  if( std::get<0>(resonatorAssembly->GetListOfAllFundamentalSubVolumes()[iSubVol]).find("Vacuum") != std::string::npos ){
 	    G4CMPLogicalBorderSurface * border_siliconChip_resonatorAssemblyEmpty = new G4CMPLogicalBorderSurface(tempName, phys_siliconChip, std::get<2>(resonatorAssembly->GetListOfAllFundamentalSubVolumes()[iSubVol]), fSiVacuumInterface);
 	  }
@@ -384,14 +388,14 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
 	}
       }
     }
-    
-    
-    
+
+
+
     //-------------------------------------------------------------------------------------------------------------------
     // Flux lines
     if( dp_useFluxLines ){
-      
-      
+
+
       //--------------------
       G4ThreeVector topStraightFluxLineTranslate(dp_topCenterFluxLineOffsetX,dp_topCenterFluxLineOffsetY,0);
       RISQTutorialStraightFluxLine * topStraightFLine = new RISQTutorialStraightFluxLine(0,
@@ -403,12 +407,12 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
 											 checkOverlaps);
       G4LogicalVolume * log_topStraightFline = topStraightFLine->GetLogicalVolume();
       G4VPhysicalVolume * phys_topStraightFline = topStraightFLine->GetPhysicalVolume();
-      
+
       //Do the logical border creation now
       for( int iSubVol = 0; iSubVol < topStraightFLine->GetListOfAllFundamentalSubVolumes().size(); ++iSubVol){
 	std::cout << "TLine sub volume names (to be used for boundaries): " << std::get<1>(topStraightFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]) << " with material " << std::get<0>(topStraightFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]) << std::endl;
-	
-	std::string tempName = "border_siliconChip_" + std::get<1>(topStraightFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]);	  
+
+	std::string tempName = "border_siliconChip_" + std::get<1>(topStraightFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]);
 	if( std::get<0>(topStraightFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]).find("Vacuum") != std::string::npos ){
 	  G4CMPLogicalBorderSurface * border_siliconChip_topStraightFluxLineEmpty = new G4CMPLogicalBorderSurface(tempName, phys_siliconChip, std::get<2>(topStraightFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]), fSiVacuumInterface);
 	}
@@ -420,7 +424,7 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
 
 
 
-	
+
 
 
       //--------------------
@@ -441,7 +445,7 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
       for( int iSubVol = 0; iSubVol < bottomStraightFLine->GetListOfAllFundamentalSubVolumes().size(); ++iSubVol){
 	std::cout << "TLine sub volume names (to be used for boundaries): " << std::get<1>(bottomStraightFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]) << " with material " << std::get<0>(bottomStraightFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]) << std::endl;
 
-	std::string tempName = "border_siliconChip_" + std::get<1>(bottomStraightFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]);	  
+	std::string tempName = "border_siliconChip_" + std::get<1>(bottomStraightFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]);
 	if( std::get<0>(bottomStraightFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]).find("Vacuum") != std::string::npos ){
 	  G4CMPLogicalBorderSurface * border_siliconChip_bottomStraightFluxLineEmpty = new G4CMPLogicalBorderSurface(tempName, phys_siliconChip, std::get<2>(bottomStraightFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]), fSiVacuumInterface);
 	}
@@ -451,9 +455,9 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
 
       }
 
-	
 
-       
+
+
 
       //--------------------
       //Corner flux line 1
@@ -469,22 +473,22 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
 										       checkOverlaps);
 
 
-	
+
       G4LogicalVolume * log_topLeftCornerFline = topLeftCornerFLine->GetLogicalVolume();
       G4VPhysicalVolume * phys_topLeftCornerFline = topLeftCornerFLine->GetPhysicalVolume();
 
-	
+
       //Do the logical border creation now
       for( int iSubVol = 0; iSubVol < topLeftCornerFLine->GetListOfAllFundamentalSubVolumes().size(); ++iSubVol){
 	std::cout << "TLine sub volume names (to be used for boundaries): " << std::get<1>(topLeftCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]) << " with material " << std::get<0>(topLeftCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]) << std::endl;
 
-	std::string tempName = "border_siliconChip_" + std::get<1>(topLeftCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]);	  
+	std::string tempName = "border_siliconChip_" + std::get<1>(topLeftCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]);
 	if( std::get<0>(topLeftCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]).find("Vacuum") != std::string::npos ){
 	  G4CMPLogicalBorderSurface * border_siliconChip_topLeftCornerFluxLineEmpty = new G4CMPLogicalBorderSurface(tempName, phys_siliconChip, std::get<2>(topLeftCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]), fSiVacuumInterface);
 	}
 	if( std::get<0>(topLeftCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]).find("Niobium") != std::string::npos ){
 	  G4CMPLogicalBorderSurface * border_siliconChip_topLeftCornerFluxLineConductor = new G4CMPLogicalBorderSurface(tempName, phys_siliconChip, std::get<2>(topLeftCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]), fSiNbInterface);
-	}	  
+	}
       }
 
 
@@ -492,7 +496,7 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
 
 
 
-	
+
 
       //--------------------
       //Corner flux line 2
@@ -513,7 +517,7 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
       for( int iSubVol = 0; iSubVol < topRightCornerFLine->GetListOfAllFundamentalSubVolumes().size(); ++iSubVol){
 	std::cout << "TLine sub volume names (to be used for boundaries): " << std::get<1>(topRightCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]) << " with material " << std::get<0>(topRightCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]) << std::endl;
 
-	std::string tempName = "border_siliconChip_" + std::get<1>(topRightCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]);	  
+	std::string tempName = "border_siliconChip_" + std::get<1>(topRightCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]);
 	if( std::get<0>(topRightCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]).find("Vacuum") != std::string::npos ){
 	  G4CMPLogicalBorderSurface * border_siliconChip_topRightCornerFluxLineEmpty = new G4CMPLogicalBorderSurface(tempName, phys_siliconChip, std::get<2>(topRightCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]), fSiVacuumInterface);
 	}
@@ -523,7 +527,7 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
 
       }
 
-    
+
 
 
       //--------------------
@@ -545,8 +549,8 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
       for( int iSubVol = 0; iSubVol < bottomLeftCornerFLine->GetListOfAllFundamentalSubVolumes().size(); ++iSubVol){
 	std::cout << "TLine sub volume names (to be used for boundaries): " << std::get<1>(bottomLeftCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]) << " with material " << std::get<0>(bottomLeftCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]) << std::endl;
 
-	  
-	std::string tempName = "border_siliconChip_" + std::get<1>(bottomLeftCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]);	  
+
+	std::string tempName = "border_siliconChip_" + std::get<1>(bottomLeftCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]);
 	if( std::get<0>(bottomLeftCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]).find("Vacuum") != std::string::npos ){
 	  G4CMPLogicalBorderSurface * border_siliconChip_bottomLeftCornerFluxLineEmpty = new G4CMPLogicalBorderSurface(tempName, phys_siliconChip, std::get<2>(bottomLeftCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]), fSiVacuumInterface);
 	}
@@ -554,11 +558,11 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
 	  G4CMPLogicalBorderSurface * border_siliconChip_bottomLeftCornerFluxLineConductor = new G4CMPLogicalBorderSurface(tempName, phys_siliconChip, std::get<2>(bottomLeftCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]), fSiNbInterface);
 	}
 
-	  
+
       }
 
-    
-    
+
+
       //--------------------
       //Corner flux line 4
       G4ThreeVector bottomRightCornerFluxLineTranslate(-1*dp_topLeftFluxLineOffsetX,-1*dp_topLeftFluxLineOffsetY,0);
@@ -579,7 +583,7 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
       for( int iSubVol = 0; iSubVol < bottomRightCornerFLine->GetListOfAllFundamentalSubVolumes().size(); ++iSubVol){
 	std::cout << "TLine sub volume names (to be used for boundaries): " << std::get<1>(bottomRightCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]) << " with material " << std::get<0>(bottomRightCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]) << std::endl;
 
-	std::string tempName = "border_siliconChip_" + std::get<1>(bottomRightCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]);	  
+	std::string tempName = "border_siliconChip_" + std::get<1>(bottomRightCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]);
 	if( std::get<0>(bottomRightCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]).find("Vacuum") != std::string::npos ){
 	  G4CMPLogicalBorderSurface * border_siliconChip_bottomRightCornerFluxLineEmpty = new G4CMPLogicalBorderSurface(tempName, phys_siliconChip, std::get<2>(bottomRightCornerFLine->GetListOfAllFundamentalSubVolumes()[iSubVol]), fSiVacuumInterface);
 	}
@@ -596,7 +600,7 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
   //---------------------------------------------------------------------------------------------------------------------
   //---------------------------------------------------------------------------------------------------------------------
   // Now we establish a sensitivity object
-  
+
   G4SDManager* SDman = G4SDManager::GetSDMpointer();
   if (!fSuperconductorSensitivity)
     fSuperconductorSensitivity = new RISQTutorialSensitivity("PhononElectrode");
@@ -630,7 +634,7 @@ void RISQTutorialDetectorConstruction::AttachPhononSensor(G4CMPSurfaceProperty *
 
   //  sensorProp->AddConstProperty("gapEnergy",3.0e-3*CLHEP::eV);      //Reasonably motivated. Novotny and Meincke, 1975 (2.8-3.14 meV)
   //  sensorProp->AddConstProperty("phononLifetime",242.*ps);      //Kaplan paper says 242ps for Al, same table says 4.17ps for characteristic time for Nb.
-  
+
   surfProp->SetPhononElectrode(new G4CMPPhononElectrode);
-  
+
 }
