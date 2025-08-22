@@ -33,7 +33,7 @@ RISQTutorialConfigMessenger::RISQTutorialConfigMessenger(RISQTutorialConfigManag
   voltageCmd = CreateCommand<G4UIcmdWithADoubleAndUnit>("Voltage",
     "Set voltage for uniform electric field");
   voltageCmd->SetUnitCategory("Electric potential");
-  voltageCmd->SetGuidance("Voltage across chip (E=V/d where d=dp_siliconChipDimZ).");
+  voltageCmd->SetGuidance("Voltage across chip (E=V/d where d=dp_housingDimZ).");
   escaleCmd = CreateCommand<G4UIcmdWithADouble>("scaleEPot",
 		"Set a scale factor for voltages in EPot electric field file");
   qAbsProbCmd = CreateCommand<G4UIcmdWithADouble>("qAbsProb",

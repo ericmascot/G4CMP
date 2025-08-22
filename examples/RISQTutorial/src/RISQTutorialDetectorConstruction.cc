@@ -60,8 +60,7 @@ RISQTutorialDetectorConstruction::RISQTutorialDetectorConstruction() :
   fLiquidHelium(nullptr), fGermanium(nullptr), fAluminum(nullptr), fTungsten(nullptr),
   fSilicon(nullptr), fNiobium(nullptr), fWorldPhys(nullptr), fSiNbInterface(nullptr),
   fSiCopperInterface(nullptr), fSiVacuumInterface(nullptr), fSuperconductorSensitivity(nullptr),
-  fEMField(nullptr), epotScale(0.0), voltage(0.0), thickness(0.0),
-  fConstructed(false), epotFileName("")
+  fEMField(nullptr), epotScale(0.0), voltage(0.0), fConstructed(false), epotFileName("")
 {
   /* Default initialization does not leave object in usable state.
    * Doesn't matter because run initialization will call Construct() and all
@@ -677,8 +676,8 @@ void RISQTutorialDetectorConstruction::AttachField(G4LogicalVolume* lv)
       std::cout << "file=" << epotFileName << std::endl;
       fEMField = new G4CMPMeshElectricField(epotFileName, epotScale);
     } else {
-      G4double fieldMag = -voltage/thickness;
-      std::cout << "E=" << fieldMag << "V/m" << std::endl;
+      G4double fieldMag = -voltage/dp_housingDimZ;
+      std::cout << "E=" << fieldMag / (CLHEP::volt / CLHEP::meter) << "V/m" << std::endl;
       fEMField = new G4UniformElectricField(fieldMag*G4ThreeVector(0., 0., 1.));
     }
   }
