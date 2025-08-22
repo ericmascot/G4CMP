@@ -55,7 +55,6 @@ private:
   G4ElectricField* fEMField;
   G4double epotScale;
   G4double voltage;
-  G4double thickness;
   G4bool fConstructed;
   G4String epotFileName;
 
