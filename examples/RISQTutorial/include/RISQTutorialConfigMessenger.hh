@@ -17,6 +17,7 @@
 #include "G4UImessenger.hh"
 
 class RISQTutorialConfigManager;
+class G4UIcmdWithADoubleAndUnit;
 class G4UIcmdWithADouble;
 class G4UIcmdWithAString;
 class G4UIcommand;
@@ -32,6 +33,10 @@ public:
 private:
   RISQTutorialConfigManager* theManager;
   G4UIcmdWithAString* hitsCmd;
+  G4UIcmdWithAString* primaryCmd;
+  G4UIcmdWithAString* fileCmd;
+  G4UIcmdWithADoubleAndUnit* voltageCmd;
+  G4UIcmdWithADouble* escaleCmd;
   G4UIcmdWithADouble* qAbsProbCmd;
   G4UIcmdWithADouble* qReflProbCmd;
 

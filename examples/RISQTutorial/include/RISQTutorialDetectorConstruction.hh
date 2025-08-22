@@ -19,21 +19,23 @@ class G4Material;
 class G4VPhysicalVolume;
 class G4CMPSurfaceProperty;
 class G4CMPElectrodeSensitivity;
+class G4ElectricField;
 
 class RISQTutorialDetectorConstruction : public G4VUserDetectorConstruction {
 public:
   RISQTutorialDetectorConstruction();
   virtual ~RISQTutorialDetectorConstruction();
-  
+
 public:
   virtual G4VPhysicalVolume* Construct();
-  
+
 private:
   void DefineMaterials();
   void SetupGeometry();
+  void AttachField(G4LogicalVolume* lv);
   void AttachPhononSensor(G4CMPSurfaceProperty * surfProp);
 
-  
+
 private:
   G4Material* fLiquidHelium;
   G4Material* fGermanium;
@@ -47,11 +49,16 @@ private:
   G4CMPSurfaceProperty* fSiCopperInterface;
   G4CMPSurfaceProperty* fSiVacuumInterface;
 
-  
+
   G4CMPElectrodeSensitivity* fSuperconductorSensitivity;
+
+  G4ElectricField* fEMField;
+  G4double epotScale;
+  G4double voltage;
+  G4double thickness;
   G4bool fConstructed;
-  //G4bool fIfField;
-  
+  G4String epotFileName;
+
   //public:
   //inline void Field(G4bool bl) { fIfField = bl; }
 };
