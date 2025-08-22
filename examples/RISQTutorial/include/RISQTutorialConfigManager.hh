@@ -27,8 +27,11 @@ public:
   static RISQTutorialConfigManager* Instance();   // Only needed by static accessors
 
   // Access current values
-  static const G4String& GetHitOutput()  { return Instance()->Hit_file; }
-  static const G4String& GetPrimaryOutput()  { return Instance()->Primary_file; }
+  static G4double GetVoltage() { return Instance()->voltage; }
+  static G4double GetEPotScale() { return Instance()->epotScale; }
+  static const G4String &GetEPotFile() { return Instance()->EPot_file; }
+  static const G4String &GetHitOutput() { return Instance()->Hit_file; }
+  static const G4String &GetPrimaryOutput() { return Instance()->Primary_file; }
   static G4double GetQAbsProb() { return Instance()->qAbsProb; }
   static G4double GetQReflProb() { return Instance()->qReflProb; }
 
@@ -37,6 +40,12 @@ public:
     { Instance()->Hit_file=name; UpdateGeometry(); }
   static void SetPrimaryOutput(const G4String& name)
     { Instance()->Hit_file=name; UpdateGeometry(); }
+  static void SetVoltage(G4double value)
+    { Instance()->voltage = value; UpdateGeometry(); }
+  static void SetEPotScale(G4double value)
+    { Instance()->epotScale = value; UpdateGeometry(); }
+  static void SetEPotFile(const G4String &name)
+    { Instance()->EPot_file = name; UpdateGeometry(); }
   static void SetQAbsProb(G4double value)
     { Instance()->qAbsProb=value; UpdateGeometry(); }
   static void SetQReflProb(G4double value)
@@ -55,10 +64,13 @@ private:
   static RISQTutorialConfigManager* theInstance;
 
 private:
-  G4String Hit_file;	// Output file of e/h hits ($G4CMP_HIT_FILE)
-  G4String Primary_file;	// Output file of primaries
-  G4double qAbsProb; // Absorption probability
-  G4double qReflProb; // Reflection probability
+  G4double voltage;      // Uniform field voltage ($G4CMP_VOLTAGE)
+  G4double epotScale;    // Scale factor for EPot ($G4CMP_EPOT_SCALE)
+  G4String EPot_file;    // Name of E-field file ($G4CMP_EPOT_FILE)
+  G4String Hit_file;     // Output file of e/h hits ($G4CMP_HIT_FILE)
+  G4String Primary_file; // Output file of primaries
+  G4double qAbsProb;     // Absorption probability
+  G4double qReflProb;    // Reflection probability
 
   RISQTutorialConfigMessenger* messenger;
 };

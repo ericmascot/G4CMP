@@ -25,6 +25,8 @@
 #include "G4CMPElectrodeSensitivity.hh"
 #include "G4CMPLogicalBorderSurface.hh"
 #include "G4CMPSurfaceProperty.hh"
+#include "G4CMPFieldManager.hh"
+#include "G4CMPMeshElectricField.hh"
 #include "G4Box.hh"
 #include "G4Colour.hh"
 #include "G4FieldManager.hh"
@@ -46,7 +48,7 @@
 #include "G4SystemOfUnits.hh"
 #include "G4TransportationManager.hh"
 #include "G4Tubs.hh"
-#include "G4UniformMagField.hh"
+#include "G4UniformElectricField.hh"
 #include "G4UserLimits.hh"
 #include "G4VisAttributes.hh"
 
@@ -54,14 +56,27 @@ using namespace RISQTutorialDetectorParameters;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-RISQTutorialDetectorConstruction::RISQTutorialDetectorConstruction()
-  : fLiquidHelium(0), fGermanium(0), fAluminum(0), fTungsten(0),
-    fWorldPhys(0),
-    fSuperconductorSensitivity(0), fConstructed(false) {;}//, fIfField(true) {;}
+RISQTutorialDetectorConstruction::RISQTutorialDetectorConstruction() :
+  fLiquidHelium(nullptr), fGermanium(nullptr), fAluminum(nullptr), fTungsten(nullptr),
+  fSilicon(nullptr), fNiobium(nullptr), fWorldPhys(nullptr), fSiNbInterface(nullptr),
+  fSiCopperInterface(nullptr), fSiVacuumInterface(nullptr), fSuperconductorSensitivity(nullptr),
+  fEMField(nullptr), epotScale(0.0), voltage(0.0), thickness(0.0),
+  fConstructed(false), epotFileName("")
+{
+  /* Default initialization does not leave object in usable state.
+   * Doesn't matter because run initialization will call Construct() and all
+   * will be well.
+   */
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-RISQTutorialDetectorConstruction::~RISQTutorialDetectorConstruction() {;}
+RISQTutorialDetectorConstruction::~RISQTutorialDetectorConstruction() {
+  delete fEMField;
+  delete fSiNbInterface;
+  delete fSiCopperInterface;
+  delete fSiVacuumInterface;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -75,11 +90,24 @@ G4VPhysicalVolume* RISQTutorialDetectorConstruction::Construct()
       G4LogicalVolumeStore::GetInstance()->Clean();
       G4SolidStore::GetInstance()->Clean();
     }
+    // Only regenerate E field if it has changed since last construction.
+    if (epotFileName != RISQTutorialConfigManager::GetEPotFile() ||
+      epotScale != RISQTutorialConfigManager::GetEPotScale() ||
+      voltage != RISQTutorialConfigManager::GetVoltage()) {
+      epotFileName = RISQTutorialConfigManager::GetEPotFile();
+      epotScale = RISQTutorialConfigManager::GetEPotScale();
+      voltage = RISQTutorialConfigManager::GetVoltage();
+      delete fEMField; fEMField = nullptr;
+    }
     // Have to completely remove all lattices to avoid warning on reconstruction
     G4LatticeManager::GetLatticeManager()->Reset();
     // Clear all LogicalSurfaces
     // NOTE: No need to redefine the G4CMPSurfaceProperties
     G4CMPLogicalBorderSurface::CleanSurfaceTable();
+  } else { // First setup of geometry
+    epotFileName = RISQTutorialConfigManager::GetEPotFile();
+    epotScale = RISQTutorialConfigManager::GetEPotScale();
+    voltage = RISQTutorialConfigManager::GetVoltage();
   }
 
   DefineMaterials();
@@ -221,6 +249,8 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
   log_siliconChip->SetVisAttributes(siliconChipVisAtt);
 
 
+  // Attach E field to silicon (logical volume, so all placements)
+  AttachField(log_siliconChip);
 
   //Set up the G4CMP silicon lattice information using the G4LatticeManager
   // G4LatticeManager gives physics processes access to lattices by volume
@@ -637,4 +667,29 @@ void RISQTutorialDetectorConstruction::AttachPhononSensor(G4CMPSurfaceProperty *
 
   surfProp->SetPhononElectrode(new G4CMPPhononElectrode);
 
+}
+
+void RISQTutorialDetectorConstruction::AttachField(G4LogicalVolume* lv)
+{
+  std::cout << "Attaching E-field: ";
+  if (!fEMField) { // Only create field if one doesn't exist.
+    if (!epotFileName.empty()) {
+      std::cout << "file=" << epotFileName << std::endl;
+      fEMField = new G4CMPMeshElectricField(epotFileName, epotScale);
+    } else {
+      G4double fieldMag = -voltage/thickness;
+      std::cout << "E=" << fieldMag << "V/m" << std::endl;
+      fEMField = new G4UniformElectricField(fieldMag*G4ThreeVector(0., 0., 1.));
+    }
+  }
+
+  // Ensure that logical volume has a field manager attached
+  if (!lv->GetFieldManager()) { // Should always run
+    std::cout << "Setting G4FieldManager" << std::endl;
+    G4FieldManager* fFieldMgr = new G4CMPFieldManager(fEMField);
+    lv->SetFieldManager(fFieldMgr, true);
+  }
+
+  lv->GetFieldManager()->SetDetectorField(fEMField);
+  std::cout << "Finished attaching E-field." << std::endl;
 }

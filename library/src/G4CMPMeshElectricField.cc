@@ -90,7 +90,7 @@ G4CMPMeshElectricField::G4CMPMeshElectricField(const G4CMPMeshElectricField &p)
   : G4ElectricField(p), Interp(p.Interp->Clone()), xCoord(p.xCoord),
     yCoord(p.yCoord) {;}
 
-G4CMPMeshElectricField& 
+G4CMPMeshElectricField&
 G4CMPMeshElectricField::operator=(const G4CMPMeshElectricField &p) {
   if (this != &p) {				// Only copy if not self
     G4ElectricField::operator=(p);		// Call through to base
@@ -133,7 +133,7 @@ BuildInterp(const std::vector<std::array<G4double,2> >& xy,
 void G4CMPMeshElectricField::BuildInterp(const G4String& EPotFileName,
                                         G4double VScale) {
   if (G4CMPConfigManager::GetVerboseLevel() > 0) {
-    G4cout << "G4CMPMeshElectricField::Constructor: Creating Electric Field " 
+    G4cout << "G4CMPMeshElectricField::Constructor: Creating Electric Field "
           << EPotFileName;
 
     if (VScale != 1.) G4cout << " rescaled by " << VScale;
@@ -143,7 +143,7 @@ void G4CMPMeshElectricField::BuildInterp(const G4String& EPotFileName,
   vector<array<G4double,4> > tempX;
   array<G4double,4> temp = {{ 0, 0, 0, 0 }};
   G4double x,y,z,v;
- 
+
   G4double vmin=99999., vmax=-99999.;
   std::ifstream epotFile(EPotFileName);
   if (!epotFile.good()) {
@@ -173,7 +173,7 @@ void G4CMPMeshElectricField::BuildInterp(const G4String& EPotFileName,
   }
 
   std::sort(tempX.begin(),tempX.end(), vector_comp);
- 
+
   vector<array<G4double,3> > X(tempX.size(), {{0,0,0}});
   vector<G4double> V(tempX.size(),0);
   for (size_t ii = 0; ii < tempX.size(); ++ii)
@@ -183,7 +183,7 @@ void G4CMPMeshElectricField::BuildInterp(const G4String& EPotFileName,
     X[ii][2] = tempX[ii][2];
     V[ii] = tempX[ii][3];
   }
- 
+
   if (Interp) delete Interp;
   Interp = new G4CMPTriLinearInterp(X, V);
 }
@@ -236,7 +236,7 @@ void G4CMPMeshElectricField::Project2D(const G4double Point[3],
   pos_.set(Point[0],Point[1],Point[2]);
 
   Project[0] = Project[1] = 0.;
-  
+
   switch (xCoord) {
   case kXAxis:    Project[0] = Point[0];  break;
   case kYAxis:    Project[0] = Point[1];  break;
@@ -246,7 +246,7 @@ void G4CMPMeshElectricField::Project2D(const G4double Point[3],
   case kPhi:	  Project[0] = pos_.phi(); break;
   default: ;
   }
-  
+
   switch (yCoord) {
   case kXAxis:    Project[1] = Point[0];  break;
   case kYAxis:    Project[1] = Point[1];  break;
@@ -293,7 +293,7 @@ void G4CMPMeshElectricField::Expand2Dat(const G4double Point[3],
     G4double phiYZ = atan2(pos_.z(), pos_.y());
     Efield.set(yval, xval*cos(phiYZ), xval*sin(phiYZ));
   }
-  
+
   if (xCoord == kRho && yCoord == kYAxis) {
     G4double phiZX = atan2(pos_.x(), pos_.z());
     Efield.set(xval*sin(phiZX), yval, xval*cos(phiZX));
@@ -301,7 +301,7 @@ void G4CMPMeshElectricField::Expand2Dat(const G4double Point[3],
 }
 
 
-// Sorting function for reading meash points from 3D input file
+// Sorting function for reading mesh points from 3D input file
 
 G4bool G4CMPMeshElectricField::vector_comp(const array<G4double,4>& p1,
                                            const array<G4double,4>& p2) {
