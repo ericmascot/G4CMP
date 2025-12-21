@@ -33,8 +33,8 @@ RISQTutorialConfigManager::RISQTutorialConfigManager()
   : voltage(getenv("G4CMP_VOLTAGE")?strtod(getenv("G4CMP_VOLTAGE"),0)*volt:0.),
     epotScale(getenv("G4CMP_EPOT_SCALE")?strtod(getenv("G4CMP_EPOT_SCALE"),0):1.),
     EPot_file(getenv("G4CMP_EPOT_FILE")?getenv("G4CMP_EPOT_FILE"):""),
-    Hit_file(getenv("G4CMP_HIT_FILE")?getenv("G4CMP_HIT_FILE"):"RISQTutorial_hits.txt"),
-    Primary_file("RISQTutorial_primary.txt"),
+    Hit_file(getenv("G4CMP_HIT_FILE")?getenv("G4CMP_HIT_FILE"):"RISQTutorial_hits.csv"),
+    Primary_file("RISQTutorial_primary.csv"),
     qAbsProb(1.),
     qReflProb(0.),
     messenger(new RISQTutorialConfigMessenger(this)) {;}
