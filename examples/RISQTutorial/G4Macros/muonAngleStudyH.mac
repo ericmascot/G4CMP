@@ -1,0 +1,43 @@
+/run/printProgress -1
+/control/verbose 0
+/tracking/verbose 0
+/event/verbose 0
+/vis/verbose 0
+/g4cmp/verbose 0
+
+/g4cmp/HitsFile muonH_hits.csv
+/g4cmp/PrimaryFile muonH_primary.csv
+/run/initialize
+
+/g4cmp/produceCharges 1.
+/g4cmp/producePhonons 0.
+/g4cmp/sampleLuke 0.
+/g4cmp/phononBounces 0
+/g4cmp/chargeBounces 1000
+
+#setTrappingMFP
+/g4cmp/hTrappingMFP 0.5 mm
+/g4cmp/eTrappingMFP 0.25 mm
+
+# Generate muon coming in at variable angle from far above the chip surface
+/gps/number 1
+/gps/particle mu-
+/gps/pos/type   Plane
+/gps/pos/shape  Circle
+/gps/pos/radius 50.0 mm
+
+# From above
+/gps/pos/rot1   1.0 0.0 0.0
+/gps/pos/rot2	0.0 1.0 0.0
+/gps/pos/centre  0.0 0.0 50. mm
+
+# Angular cosine distribution
+/gps/ang/type cos
+
+# Power law spectrum with slope of -1
+/gps/ene/type Pow
+/gps/ene/min 1 GeV
+/gps/ene/max 100 GeV
+/gps/ene/alpha -1
+
+/run/beamOn 1000000
