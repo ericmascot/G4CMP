@@ -66,10 +66,17 @@ void RISQTutorialSensitivity::EndOfEvent(G4HCofThisEvent* HCE) {
   // Do hit output writing to file
   if (hitOutput.good()) {
     for (G4CMPElectrodeHit* hit : *hitVec) {
+      int q = 0;
+      G4String name = hit->GetParticleName();
+      if (name == "G4CMPDriftHole") {
+        q = 1;
+      } else if (name == "G4CMPDriftElectron") {
+        q = -1;
+      }
       hitOutput << runMan->GetCurrentRun()->GetRunID() << ","
                 << runMan->GetCurrentEvent()->GetEventID() << ","
                 << hit->GetTrackID() << ","
-                << hit->GetParticleName() << ","
+                << q << ","
                 << hit->GetStartEnergy()/eV << ","
                 << hit->GetStartPosition().getX()/mm << ","
                 << hit->GetStartPosition().getY()/mm << ","
@@ -97,10 +104,10 @@ void RISQTutorialSensitivity::SetHitOutputFile(const G4String &fn) {
                   FatalException, msg);
       hitOutput.close();
     } else {
-      hitOutput << "Run ID,Event ID,Track ID,Particle Name,Start Energy [eV],"
+      hitOutput << "Run ID,Event ID,Track ID,Charge [e],Start Energy [eV],"
 		<< "Start X [mm],Start Y [mm],Start Z [mm],Start Time [ns],"
 		<< "Energy Deposited [eV],Track Weight,End X [mm],End Y [mm],End Z [mm],"
-		<< "Final Time [ns],Volume Name\n";
+		<< "Final Time [ns]\n";
     }
   }
 }
