@@ -39,7 +39,7 @@ public:
   static void SetHitOutput(const G4String& name)
     { Instance()->Hit_file=name; UpdateGeometry(); }
   static void SetPrimaryOutput(const G4String& name)
-    { Instance()->Hit_file=name; UpdateGeometry(); }
+    { Instance()->Primary_file=name; UpdateGeometry(); }
   static void SetVoltage(G4double value)
     { Instance()->voltage = value; UpdateGeometry(); }
   static void SetEPotScale(G4double value)
