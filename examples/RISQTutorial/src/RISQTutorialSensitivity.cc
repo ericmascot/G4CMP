@@ -52,13 +52,13 @@ void RISQTutorialSensitivity::EndOfEvent(G4HCofThisEvent* HCE) {
 
   //Do primary output writing to file
   if( primaryOutput.good() ){
-    primaryOutput << runMan->GetCurrentRun()->GetRunID() << " "
-		  << runMan->GetCurrentEvent()->GetEventID() << " "
-		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetParticleDefinition()->GetParticleName() << " "
-		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetTotalEnergy()/eV << " "
-		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetX0()/mm << " "
-		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetY0()/mm << " "
-		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetZ0()/mm << " "
+    primaryOutput << runMan->GetCurrentRun()->GetRunID() << ","
+		  << runMan->GetCurrentEvent()->GetEventID() << ","
+		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetParticleDefinition()->GetParticleName() << ","
+		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetTotalEnergy()/eV << ","
+		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetX0()/mm << ","
+		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetY0()/mm << ","
+		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetZ0()/mm << ","
 		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetT0()/ns << "\n";
   }
 
@@ -66,21 +66,21 @@ void RISQTutorialSensitivity::EndOfEvent(G4HCofThisEvent* HCE) {
   // Do hit output writing to file
   if (hitOutput.good()) {
     for (G4CMPElectrodeHit* hit : *hitVec) {
-      hitOutput << runMan->GetCurrentRun()->GetRunID() << ' '
-                << runMan->GetCurrentEvent()->GetEventID() << ' '
-                << hit->GetTrackID() << ' '
-                << hit->GetParticleName() << ' '
-                << hit->GetStartEnergy()/eV << ' '
-                << hit->GetStartPosition().getX()/mm << ' '
-                << hit->GetStartPosition().getY()/mm << ' '
-                << hit->GetStartPosition().getZ()/mm << ' '
-                << hit->GetStartTime()/ns << ' '
-                << hit->GetEnergyDeposit()/eV << ' '
-                << hit->GetWeight() << ' '
-                << hit->GetFinalPosition().getX()/mm << ' '
-                << hit->GetFinalPosition().getY()/mm << ' '
-                << hit->GetFinalPosition().getZ()/mm << ' '
-                << hit->GetFinalTime()/ns << '\n';
+      hitOutput << runMan->GetCurrentRun()->GetRunID() << ","
+                << runMan->GetCurrentEvent()->GetEventID() << ","
+                << hit->GetTrackID() << ","
+                << hit->GetParticleName() << ","
+                << hit->GetStartEnergy()/eV << ","
+                << hit->GetStartPosition().getX()/mm << ","
+                << hit->GetStartPosition().getY()/mm << ","
+                << hit->GetStartPosition().getZ()/mm << ","
+                << hit->GetStartTime()/ns << ","
+                << hit->GetEnergyDeposit()/eV << ","
+                << hit->GetWeight() << ","
+                << hit->GetFinalPosition().getX()/mm << ","
+                << hit->GetFinalPosition().getY()/mm << ","
+                << hit->GetFinalPosition().getZ()/mm << ","
+                << hit->GetFinalTime()/ns << "\n";
     }
   }
 }
@@ -150,7 +150,7 @@ G4bool RISQTutorialSensitivity::IsHit(const G4Step* step,
   //                        postStepPoint->GetStepStatus() == fGeomBoundary &&
   //                        step->GetNonIonizingEnergyDeposit() > 0.;
   G4bool correctStatus = step->GetTrack()->GetTrackStatus() == fStopAndKill;
-  
+
   G4bool landedOnTargetSurface = (postStepPoint->GetPhysicalVolume()->GetName().find("shuntConductor") != std::string::npos);
 
   //Now select which critera matter:
