@@ -52,10 +52,14 @@ void RISQTutorialSensitivity::EndOfEvent(G4HCofThisEvent* HCE) {
 
   //Do primary output writing to file
   if( primaryOutput.good() ){
+    G4ThreeVector P = runMan->GetCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetMomentum();
     primaryOutput << runMan->GetCurrentRun()->GetRunID() << ","
 		  << runMan->GetCurrentEvent()->GetEventID() << ","
 		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetParticleDefinition()->GetParticleName() << ","
 		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetTotalEnergy()/eV << ","
+		  << P.x()/eV << ","
+		  << P.y()/eV << ","
+		  << P.z()/eV << ","
 		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetX0()/mm << ","
 		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetY0()/mm << ","
 		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetZ0()/mm << ","
@@ -137,6 +141,7 @@ void RISQTutorialSensitivity::SetPrimaryOutputFile(const G4String &fn) {
       primaryOutput.close();
     } else {
       primaryOutput << "Run ID,Event ID,Particle Name,Start Energy [eV],"
+        << "Momentum X [eV/c],Momentum Y [eV/c],Momentum Z [eV/c],"
 		    << "Start X [mm],Start Y [mm],Start Z [mm],Start Time [ns]\n";
     }
   }
