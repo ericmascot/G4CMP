@@ -56,6 +56,7 @@ void RISQTutorialSensitivity::EndOfEvent(G4HCofThisEvent* HCE) {
     primaryOutput << runMan->GetCurrentRun()->GetRunID() << ","
 		  << runMan->GetCurrentEvent()->GetEventID() << ","
 		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetParticleDefinition()->GetParticleName() << ","
+		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetWeight() << ","
 		  << runMan->GetCurrentEvent()->GetPrimaryVertex()->GetPrimary()->GetTotalEnergy()/eV << ","
 		  << P.x()/eV << ","
 		  << P.y()/eV << ","
@@ -140,7 +141,7 @@ void RISQTutorialSensitivity::SetPrimaryOutputFile(const G4String &fn) {
                   FatalException, msg);
       primaryOutput.close();
     } else {
-      primaryOutput << "Run ID,Event ID,Particle Name,Start Energy [eV],"
+      primaryOutput << "Run ID,Event ID,Particle Name,Particle Weight,Start Energy [eV],"
         << "Momentum X [eV/c],Momentum Y [eV/c],Momentum Z [eV/c],"
 		    << "Start X [mm],Start Y [mm],Start Z [mm],Start Time [ns]\n";
     }
