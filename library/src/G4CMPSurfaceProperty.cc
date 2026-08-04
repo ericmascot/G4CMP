@@ -47,8 +47,8 @@ G4CMPSurfaceProperty::G4CMPSurfaceProperty(const G4String& name,
                                            G4double pReflProb,
                                            G4double pSpecProb,
                                            G4double pMinK,
-					   G4double qpAbsProb,
-					   G4double qpReflProb,
+                                           G4double qpAbsProb,
+                                           G4double qpReflProb,
                                            G4SurfaceType stype)
 : G4CMPSurfaceProperty(name, stype) {
   FillChargeMaterialPropertiesTable(qAbsProb, qReflProb, eMinK, hMinK);
@@ -86,7 +86,7 @@ G4CMPSurfaceProperty::~G4CMPSurfaceProperty() {
 
   for (auto& pelkv: workerPhononElectrode) { delete pelkv.second; }
   workerPhononElectrode.clear();
-    
+
   for (auto& qpelkv: workerQPElectrode) { delete qpelkv.second; }
   workerQPElectrode.clear();
 }
@@ -238,7 +238,7 @@ ExpandCoeffsPoly(G4double freq, const std::vector<G4double>& coeff) const {
 
 G4double G4CMPSurfaceProperty::AnharmonicReflProb(G4double freq) const {
   if (anharmonicCoeffs.empty() || freq > anharmonicMaxFreq) return 0.;
- 
+
   return ExpandCoeffsPoly(freq, anharmonicCoeffs);
 }
 
