@@ -70,13 +70,13 @@ RISQTutorialStraightFluxLine::RISQTutorialStraightFluxLine(G4RotationMatrix * pR
 			    pCopyNo,
 			    pSurfChk);
 
-  
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 // Default Constructor
 RISQTutorialStraightFluxLine::RISQTutorialStraightFluxLine()
-{  
+{
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -107,9 +107,9 @@ void RISQTutorialStraightFluxLine::ConstructStraightFluxLine(G4RotationMatrix * 
   niobium_vis->SetVisibility(true);
   G4VisAttributes* air_vis= new G4VisAttributes(G4Colour(0.5,0.5,0.5,0.5));
   air_vis->SetVisibility(true);
-  
 
-  
+
+
 
   //------------------------------------------------------------------------------------------
   //Start with a base layer of niobium into which our objects will fit. We'll return this in the end.
@@ -125,14 +125,14 @@ void RISQTutorialStraightFluxLine::ConstructStraightFluxLine(G4RotationMatrix * 
   G4LogicalVolume * log_baseNbLayer = new G4LogicalVolume(solid_baseNbLayer,
 							  niobium_mat,
 							  baseNbLayerNameLog);
-  log_baseNbLayer->SetVisAttributes(G4VisAttributes::Invisible);//niobium_vis);
+  log_baseNbLayer->SetVisAttributes(G4VisAttributes::GetInvisible());//niobium_vis);
 
   //Now, create a physical volume and G4PVPlacement for storing as the final output. This is the
   //top volume.
   G4VPhysicalVolume* phys_baseNbLayer = new G4PVPlacement(pRot,
 							  tLate,
 							  log_baseNbLayer,
-							  baseNbLayerName, 
+							  baseNbLayerName,
 							  pMotherLogical,
 							  pMany,
 							  pCopyNo,
@@ -145,7 +145,7 @@ void RISQTutorialStraightFluxLine::ConstructStraightFluxLine(G4RotationMatrix * 
   //------------------------------------------------------------------------------------------
   //Now make the pad of the flux line. The logical mother volume of these is the base
   //Ni layer. Pads come with their own visualization attributes already set.
-  
+
   //Pad 1:
   G4String pad1Name = pName + "_FluxLinePad1";
   G4RotationMatrix * pad1Rot = new G4RotationMatrix();
@@ -160,8 +160,8 @@ void RISQTutorialStraightFluxLine::ConstructStraightFluxLine(G4RotationMatrix * 
   G4LogicalVolume * log_pad1 = pad1->GetLogicalVolume();
   G4VPhysicalVolume * phys_pad1 = pad1->GetPhysicalVolume();
   AddComplexGeometryPadSubVolumesToThisList(pad1);
-  
-  
+
+
 
   //------------------------------------------------------------------------------------------
   //Now make the flux line itself, in two parts: empty and conductor. The logical
@@ -173,7 +173,7 @@ void RISQTutorialStraightFluxLine::ConstructStraightFluxLine(G4RotationMatrix * 
 					  0.5 * dp_fluxLineEmptyDimX,
 					  0.5 * dp_fluxLineEmptyDimY,
 					  0.5 * dp_fluxLineEmptyDimZ);
-  
+
   G4LogicalVolume * log_fluxLineEmpty = new G4LogicalVolume(solid_fluxLineEmpty,
 							    air_mat,
 							    flNameEmptyLog);
@@ -187,15 +187,15 @@ void RISQTutorialStraightFluxLine::ConstructStraightFluxLine(G4RotationMatrix * 
 							     true);
   log_fluxLineEmpty->SetVisAttributes(air_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Vacuum",flNameEmpty,phys_fluxLineEmpty));
-  
-  
+
+
   G4String flNameConductor = pName + "_FluxLineConductor";
   G4String flNameConductorSolid = flNameConductor + "_solid";
   G4String flNameConductorLog = flNameConductor + "_log";
   G4Box * solid_fluxLineConductor = new G4Box(flNameConductorSolid,
 					      0.5 * dp_fluxLineConductorDimX,
 					      0.5 * dp_fluxLineConductorDimY,
-					      0.5 * dp_fluxLineConductorDimZ);  
+					      0.5 * dp_fluxLineConductorDimZ);
   G4LogicalVolume * log_fluxLineConductor = new G4LogicalVolume(solid_fluxLineConductor,
 								niobium_mat,
 								flNameConductorLog);
@@ -209,8 +209,8 @@ void RISQTutorialStraightFluxLine::ConstructStraightFluxLine(G4RotationMatrix * 
 								 true);
   log_fluxLineConductor->SetVisAttributes(niobium_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",flNameConductor,phys_fluxLineConductor));
-  
-  
+
+
 
 
 
@@ -230,7 +230,7 @@ void RISQTutorialStraightFluxLine::ConstructStraightFluxLine(G4RotationMatrix * 
   */
 
 
-  
+
 
 }
 

@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(RISQTutorial)
+set(CMAKE_CXX_STANDARD 17)
 
 #----------------------------------------------------------------------------
 # Find G4CMP package -- NOTE: Assumes user has run g4cmp_env.*sh script!
@@ -26,12 +27,12 @@ include(${Geant4_USE_FILE})
 #----------------------------------------------------------------------------
 # RPATH stuff
 #
-# Automatically add paths of linked libraries to RPATH *unless* they are in the 
+# Automatically add paths of linked libraries to RPATH *unless* they are in the
 # build directory
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-# Set the RPATH of the installed objects *unless* they are installing to a 
+# Set the RPATH of the installed objects *unless* they are installing to a
 # system directory, in which case they shouldn't need an explicitly set RPATH.
-list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES 
+list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES
      "${CMAKE_INSTALL_PREFIX}/lib" is_SYSTEM_DIR)
 if("${is_SYSTEM_DIR}" STREQUAL "-1")
     set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
@@ -40,11 +41,11 @@ endif()
 #----------------------------------------------------------------------------
 # Build stuff
 #
-set(RISQTutorial_SOURCES 
+set(RISQTutorial_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/RISQTutorialActionInitialization.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/src/RISQTutorialSteppingAction.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/RISQTutorialConfigManager.cc 
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/RISQTutorialConfigMessenger.cc 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/RISQTutorialConfigManager.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/RISQTutorialConfigMessenger.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/src/RISQTutorialDetectorConstruction.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/src/RISQTutorialPrimaryGeneratorAction.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/src/RISQTutorialSensitivity.cc
@@ -55,7 +56,7 @@ set(RISQTutorial_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/RISQTutorialStraightFluxLine.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/src/RISQTutorialCornerFluxLine.cc
     )
-    
+
 if(USE_GEANT4_STATIC_LIBS)
     add_library(RISQTutorialLib STATIC ${RISQTutorial_SOURCES})
 else()

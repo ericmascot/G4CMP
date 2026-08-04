@@ -71,13 +71,13 @@ RISQTutorialResonatorAssembly::RISQTutorialResonatorAssembly(G4RotationMatrix * 
 			    pCopyNo,
 			    pSurfChk);
 
-  
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 // Default Constructor
 RISQTutorialResonatorAssembly::RISQTutorialResonatorAssembly()
-{  
+{
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -108,12 +108,12 @@ void RISQTutorialResonatorAssembly::ConstructResonatorAssembly(G4RotationMatrix 
   niobium_vis->SetVisibility(true);
   G4VisAttributes* air_vis= new G4VisAttributes(G4Colour(0.5,0.5,0.5,0.5));
   air_vis->SetVisibility(true);
-  
 
 
 
 
-  
+
+
 
   //------------------------------------------------------------------------------------------
   //Start with a base layer of niobium into which our objects will fit. We'll return this in the end.
@@ -129,14 +129,14 @@ void RISQTutorialResonatorAssembly::ConstructResonatorAssembly(G4RotationMatrix 
   G4LogicalVolume * log_baseNbLayer = new G4LogicalVolume(solid_baseNbLayer,
 							  niobium_mat,
 							  baseNbLayerNameLog);
-  log_baseNbLayer->SetVisAttributes(G4VisAttributes::Invisible);//niobium_vis);
+  log_baseNbLayer->SetVisAttributes(G4VisAttributes::GetInvisible());//niobium_vis);
 
   //Now, create a physical volume and G4PVPlacement for storing as the final output. This is the
   //top volume.
   G4VPhysicalVolume* phys_baseNbLayer = new G4PVPlacement(pRot,
 							  tLate,
 							  log_baseNbLayer,
-							  baseNbLayerName, 
+							  baseNbLayerName,
 							  pMotherLogical,
 							  pMany,
 							  pCopyNo,
@@ -150,17 +150,17 @@ void RISQTutorialResonatorAssembly::ConstructResonatorAssembly(G4RotationMatrix 
   //------------------------------------------------------------------------------------------
   //Now make the various components of the resonator array: line+coupling, shunt capacitance (cross), and qubit
   MakeResonatorLine(pName,log_baseNbLayer);
-  MakeShuntCapacitorCross(pName,log_baseNbLayer);  
+  MakeShuntCapacitorCross(pName,log_baseNbLayer);
 
-  /*  
+  /*
 
-  
+
 
 
   //------------------------------------------------------------------------------------------
   //Now make the pads of the transmission line. The logical mother volume of these is the base
   //Nb layer. Pads come with their own visualization attributes already set.
-  
+
   //Pad 1:
   G4String pad1Name = pName + "_TransmissionLinePad1";
   RISQTutorialPad * pad1 = new RISQTutorialPad(0,
@@ -172,7 +172,7 @@ void RISQTutorialResonatorAssembly::ConstructResonatorAssembly(G4RotationMatrix 
 							       checkOverlaps);
   G4LogicalVolume * log_pad1 = pad1->GetLogicalVolume();
   G4VPhysicalVolume * phys_pad1 = pad1->GetPhysicalVolume();
-  
+
 
   //Pad 2: rotate around Z axis by 180 degrees
   G4String pad2Name = pName + "_TransmissionLinePad2";
@@ -188,10 +188,10 @@ void RISQTutorialResonatorAssembly::ConstructResonatorAssembly(G4RotationMatrix 
   G4LogicalVolume * log_pad2 = pad1->GetLogicalVolume();
   G4VPhysicalVolume * phys_pad2 = pad1->GetPhysicalVolume();
 
-  
 
 
-  
+
+
   //------------------------------------------------------------------------------------------
   //Now make the transmission line itself, in two parts: empty and conductor. The logical
   //mother volume of this is the base Ni layer.
@@ -207,8 +207,8 @@ void RISQTutorialResonatorAssembly::ConstructResonatorAssembly(G4RotationMatrix 
   G4LogicalVolume * log_transmissionLineEmpty = new G4LogicalVolume(solid_transmissionLineEmpty,
 								    air_mat,
 								    tlNameEmptyLog);
-  log_transmissionLineEmpty->SetVisAttributes(air_vis);//G4VisAttributes::Invisible);
-  
+  log_transmissionLineEmpty->SetVisAttributes(air_vis);//G4VisAttributes::GetInvisible());
+
   G4VPhysicalVolume * phys_transmissionLineEmpty = new G4PVPlacement(0,
 								     G4ThreeVector(0,0,0),
 								     log_transmissionLineEmpty,
@@ -219,7 +219,7 @@ void RISQTutorialResonatorAssembly::ConstructResonatorAssembly(G4RotationMatrix 
 								     true);
 
 
-  
+
   G4String tlNameConductor = pName + "_TransmissionLineConductor";
   G4String tlNameConductorSolid = tlNameConductor + "_solid";
   G4String tlNameConductorLog = tlNameConductor + "_log";
@@ -227,12 +227,12 @@ void RISQTutorialResonatorAssembly::ConstructResonatorAssembly(G4RotationMatrix 
 						      0.5 * (dp_transmissionLinePad2Offset - dp_transmissionLinePad1Offset - 2 * dp_padEmptyPart2TrdZ - 2 * 0.5 * dp_padEmptyPart1DimX),
 						      0.5 * dp_transmissionLineConductorWidth,
 						      0.5 * dp_transmissionLineBaseLayerDimZ);
-  
+
   G4LogicalVolume * log_transmissionLineConductor = new G4LogicalVolume(solid_transmissionLineConductor,
 									niobium_mat,
 									tlNameConductorLog);
   log_transmissionLineConductor->SetVisAttributes(niobium_vis);
-  
+
   G4VPhysicalVolume * phys_transmissionLineConductor = new G4PVPlacement(0,
 									 G4ThreeVector(0,0,0),
 									 log_transmissionLineConductor,
@@ -242,7 +242,7 @@ void RISQTutorialResonatorAssembly::ConstructResonatorAssembly(G4RotationMatrix 
 									 0,
 									 true);
 
-  
+
 
 
   */
@@ -262,7 +262,7 @@ void RISQTutorialResonatorAssembly::ConstructResonatorAssembly(G4RotationMatrix 
   */
 
 
-  
+
 
 }
 
@@ -280,7 +280,7 @@ void RISQTutorialResonatorAssembly::MakeShuntCapacitorCross(G4String pName, G4Lo
   G4Material* niobium_mat = nist->FindOrBuildMaterial("G4_Nb");
   G4Material* air_mat = nist->FindOrBuildMaterial("G4_AIR");
   bool checkOverlaps = true;
-  
+
   //Set up the niobium visualization
   G4VisAttributes* niobium_vis= new G4VisAttributes(G4Colour(0.0,1.0,1.0,0.5));
   niobium_vis->SetVisibility(true);
@@ -292,10 +292,10 @@ void RISQTutorialResonatorAssembly::MakeShuntCapacitorCross(G4String pName, G4Lo
   //Each batch has the following elements strung together, in order:
   //1. A vertical block
   //2. A horizontal block
-  
+
   //Some useful translations relative to the center of the plane in which all of this is embedded
   G4ThreeVector brCornerOfBaseNbLayer(0.5*dp_resonatorAssemblyBaseNbDimX,-0.5*dp_resonatorAssemblyBaseNbDimY,0); //Bottom right corner relative to center of the plane
-  
+
   //------------------------------------------------------
   //Vertical block (empty/cavity)
   G4String shuntEmptyName = pName + "_shuntEmpty";
@@ -305,7 +305,7 @@ void RISQTutorialResonatorAssembly::MakeShuntCapacitorCross(G4String pName, G4Lo
   G4Box * solid_shuntHorizontalBlockEmpty = new G4Box("ShuntHorizontalBlockEmpty",0.5 * dp_shuntHorizontalBlockEmptyDimX,0.5 * dp_shuntHorizontalBlockEmptyDimY,0.5 * dp_shuntHorizontalBlockEmptyDimZ);
   G4UnionSolid * solid_shuntEmpty = new G4UnionSolid(shuntEmptyNameSolid,solid_shuntVertBlockEmpty,solid_shuntHorizontalBlockEmpty,0,G4ThreeVector(0,0,0));
 
-  
+
   G4LogicalVolume * log_shuntEmpty = new G4LogicalVolume(solid_shuntEmpty,air_mat,shuntEmptyNameLog);
   G4ThreeVector shuntWrtBRCorner(-1*dp_shuntCenterToBottomRightCornerOfBaseLayerDimX,dp_shuntCenterToBottomRightCornerOfBaseLayerDimY,0);
   G4VPhysicalVolume * shuntEmpty = new G4PVPlacement(0,shuntWrtBRCorner+brCornerOfBaseNbLayer,log_shuntEmpty,shuntEmptyName,log_baseNbLayer,false,0,true);
@@ -320,7 +320,7 @@ void RISQTutorialResonatorAssembly::MakeShuntCapacitorCross(G4String pName, G4Lo
   G4String shuntConductorNameLog = shuntConductorName + "_log";
   G4Box * solid_shuntVertBlockConductor = new G4Box("shuntVertBlockConductor",0.5 * dp_shuntVertBlockConductorDimX,0.5 * dp_shuntVertBlockConductorDimY,0.5 * dp_shuntVertBlockConductorDimZ);
   G4Box * solid_shuntHorizontalBlockConductor = new G4Box("ShuntHorizontalBlockConductor",0.5 * dp_shuntHorizontalBlockConductorDimX,0.5 * dp_shuntHorizontalBlockConductorDimY,0.5 * dp_shuntHorizontalBlockConductorDimZ);
-  G4UnionSolid * solid_shuntConductor = new G4UnionSolid(shuntConductorNameSolid,solid_shuntVertBlockConductor,solid_shuntHorizontalBlockConductor,0,G4ThreeVector(0,0,0));  
+  G4UnionSolid * solid_shuntConductor = new G4UnionSolid(shuntConductorNameSolid,solid_shuntVertBlockConductor,solid_shuntHorizontalBlockConductor,0,G4ThreeVector(0,0,0));
   G4LogicalVolume * log_shuntConductor = new G4LogicalVolume(solid_shuntConductor,niobium_mat,shuntConductorNameLog);
   G4VPhysicalVolume * shuntConductor = new G4PVPlacement(0,G4ThreeVector(0,0,0),log_shuntConductor,shuntConductorName,log_shuntEmpty,false,0,true);
   log_shuntConductor->SetVisAttributes(niobium_vis);
@@ -330,7 +330,7 @@ void RISQTutorialResonatorAssembly::MakeShuntCapacitorCross(G4String pName, G4Lo
 
 
 }
-  
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 // Make the resonator line
@@ -350,8 +350,8 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4VisAttributes* air_vis= new G4VisAttributes(G4Colour(0.5,0.5,0.5,0.5));
   air_vis->SetVisibility(true);
 
-  
-  
+
+
   //This will be made in two batches: one for "empty" space and one for "conductor" space (the line itself)
   //Each batch has the following elements strung together, in order:
   //1. Coupling to the transmission line - DONE
@@ -369,7 +369,7 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   //13. Half circle 5 - DONE
   //14. - DONE
   //15. Half circle 6 - DONE
-  //15. Straight horizontal line 
+  //15. Straight horizontal line
   //16. Curve 3
   //17. Vertical straight to shunt coupler
   //18. Shunt coupler horizontal
@@ -379,8 +379,8 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
 
   //Some useful translations relative to the center of the plane in which all of this is embedded
   G4ThreeVector brCornerOfBaseNbLayer(0.5*dp_resonatorAssemblyBaseNbDimX,-0.5*dp_resonatorAssemblyBaseNbDimY,0); //Bottom right corner relative to center of the plane
-  
-  
+
+
 
   //------------------------------------------------------
   //Coupling to the transmission line (empty/cavity)
@@ -395,7 +395,7 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Vacuum",tlCouplingEmptyName,tlCouplingEmpty));
 
 
-  
+
   //------------------------------------------------------
   //Coupling to the transmission line (conductor)
   G4String tlCouplingConductorName = pName + "_tlCouplingConductor";
@@ -414,7 +414,7 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4String curve1EmptyNameSolid = curve1EmptyName + "_solid";
   G4String curve1EmptyNameLog = curve1EmptyName + "_log";
   G4Tubs * solid_curve1Empty = new G4Tubs(curve1EmptyNameSolid,dp_resonatorAssemblyCurveSmallestRadius,dp_resonatorAssemblyCurveSmallestRadius + dp_tlCouplingEmptyDimY,dp_curveEmptyDimZ/2.0,180.*deg,90.*deg);
-  G4LogicalVolume * log_curve1Empty = new G4LogicalVolume(solid_curve1Empty,air_mat,curve1EmptyNameLog);  
+  G4LogicalVolume * log_curve1Empty = new G4LogicalVolume(solid_curve1Empty,air_mat,curve1EmptyNameLog);
   G4ThreeVector curve1WrtBRCorner(-1*dp_tlCouplingEmptyDimX,0.5*dp_tlCouplingEmptyDimY + dp_resonatorAssemblyBaseNbEdgeBottomDimY + dp_resonatorAssemblyCurveCentralRadius,0.0); //Good for empty or conductor
   G4VPhysicalVolume * curve1Empty = new G4PVPlacement(0,curve1WrtBRCorner+brCornerOfBaseNbLayer,log_curve1Empty,curve1EmptyName,log_baseNbLayer,false,0,true);
   log_curve1Empty->SetVisAttributes(air_vis);
@@ -426,7 +426,7 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4String curve1ConductorNameSolid = curve1ConductorName + "_solid";
   G4String curve1ConductorNameLog = curve1ConductorName + "_log";
   G4Tubs * solid_curve1Conductor = new G4Tubs(curve1ConductorNameSolid,dp_resonatorAssemblyCurveCentralRadius - dp_tlCouplingConductorDimY/2.0,dp_resonatorAssemblyCurveCentralRadius + dp_tlCouplingConductorDimY/2.0,dp_curveEmptyDimZ/2.0,180.*deg,90.*deg);
-  G4LogicalVolume * log_curve1Conductor = new G4LogicalVolume(solid_curve1Conductor,niobium_mat,curve1ConductorNameLog);  
+  G4LogicalVolume * log_curve1Conductor = new G4LogicalVolume(solid_curve1Conductor,niobium_mat,curve1ConductorNameLog);
   G4VPhysicalVolume * curve1Conductor = new G4PVPlacement(0,G4ThreeVector(0,0,0),log_curve1Conductor,curve1ConductorName,log_curve1Empty,false,0,true);
   log_curve1Conductor->SetVisAttributes(niobium_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",curve1ConductorName,curve1Conductor));
@@ -438,13 +438,13 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4String curve2EmptyNameSolid = curve2EmptyName + "_solid";
   G4String curve2EmptyNameLog = curve2EmptyName + "_log";
   G4Tubs * solid_curve2Empty = new G4Tubs(curve2EmptyNameSolid,dp_resonatorAssemblyCurveSmallestRadius,dp_resonatorAssemblyCurveSmallestRadius + dp_tlCouplingEmptyDimY,dp_curveEmptyDimZ/2.0,0.*deg,90.*deg);
-  G4LogicalVolume * log_curve2Empty = new G4LogicalVolume(solid_curve2Empty,air_mat,curve2EmptyNameLog);  
+  G4LogicalVolume * log_curve2Empty = new G4LogicalVolume(solid_curve2Empty,air_mat,curve2EmptyNameLog);
   G4ThreeVector curve2WrtBRCorner(-1*dp_tlCouplingEmptyDimX - 2*dp_resonatorAssemblyCurveCentralRadius,0.5*dp_tlCouplingEmptyDimY + dp_resonatorAssemblyBaseNbEdgeBottomDimY + dp_resonatorAssemblyCurveCentralRadius,0.0); //Good for empty or conductor
   G4VPhysicalVolume * curve2Empty = new G4PVPlacement(0,curve2WrtBRCorner+brCornerOfBaseNbLayer,log_curve2Empty,curve2EmptyName,log_baseNbLayer,false,0,true);
   log_curve2Empty->SetVisAttributes(air_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Vacuum",curve2EmptyName,curve2Empty));
 
-  
+
 
   //------------------------------------------------------
   //Curve 2 (conductor)
@@ -452,7 +452,7 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4String curve2ConductorNameSolid = curve2ConductorName + "_solid";
   G4String curve2ConductorNameLog = curve2ConductorName + "_log";
   G4Tubs * solid_curve2Conductor = new G4Tubs(curve2ConductorNameSolid,dp_resonatorAssemblyCurveCentralRadius - dp_tlCouplingConductorDimY/2.0,dp_resonatorAssemblyCurveCentralRadius + dp_tlCouplingConductorDimY/2.0,dp_curveEmptyDimZ/2.0,0.*deg,90.*deg);
-  G4LogicalVolume * log_curve2Conductor = new G4LogicalVolume(solid_curve2Conductor,niobium_mat,curve2ConductorNameLog);  
+  G4LogicalVolume * log_curve2Conductor = new G4LogicalVolume(solid_curve2Conductor,niobium_mat,curve2ConductorNameLog);
   G4VPhysicalVolume * curve2Conductor = new G4PVPlacement(0,G4ThreeVector(0,0,0),log_curve2Conductor,curve2ConductorName,log_curve2Empty,false,0,true);
   log_curve2Conductor->SetVisAttributes(niobium_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",curve2ConductorName,curve2Conductor));
@@ -467,7 +467,7 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4String shl1EmptyNameLog = shl1EmptyName + "_log";
   G4Box * solid_shl1Empty = new G4Box(shl1EmptyNameSolid,0.5 * dp_shl1EmptyDimX,0.5 * dp_shl1EmptyDimY,0.5 * dp_shl1EmptyDimZ);
   G4LogicalVolume * log_shl1Empty = new G4LogicalVolume(solid_shl1Empty,air_mat,shl1EmptyNameLog);
-  G4ThreeVector shl1WrtBRCorner = curve2WrtBRCorner + G4ThreeVector(-0.5*dp_shl1EmptyDimX,dp_resonatorAssemblyCurveCentralRadius,0);  
+  G4ThreeVector shl1WrtBRCorner = curve2WrtBRCorner + G4ThreeVector(-0.5*dp_shl1EmptyDimX,dp_resonatorAssemblyCurveCentralRadius,0);
   G4VPhysicalVolume * shl1Empty = new G4PVPlacement(0,shl1WrtBRCorner+brCornerOfBaseNbLayer,log_shl1Empty,shl1EmptyName,log_baseNbLayer,false,0,true);
   log_shl1Empty->SetVisAttributes(air_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Vacuum",shl1EmptyName,shl1Empty));
@@ -493,25 +493,25 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4String halfCircle1EmptyNameSolid = halfCircle1EmptyName + "_solid";
   G4String halfCircle1EmptyNameLog = halfCircle1EmptyName + "_log";
   G4Tubs * solid_halfCircle1Empty = new G4Tubs(halfCircle1EmptyNameSolid,dp_resonatorAssemblyCurveSmallestRadius,dp_resonatorAssemblyCurveSmallestRadius + dp_tlCouplingEmptyDimY,dp_curveEmptyDimZ/2.0,90.*deg,180.*deg);
-  G4LogicalVolume * log_halfCircle1Empty = new G4LogicalVolume(solid_halfCircle1Empty,air_mat,halfCircle1EmptyNameLog);  
+  G4LogicalVolume * log_halfCircle1Empty = new G4LogicalVolume(solid_halfCircle1Empty,air_mat,halfCircle1EmptyNameLog);
   G4ThreeVector halfCircle1WrtBRCorner = shl1WrtBRCorner + G4ThreeVector(-0.5*dp_shl1EmptyDimX,dp_resonatorAssemblyCurveCentralRadius,0.0);
   G4VPhysicalVolume * halfCircle1Empty = new G4PVPlacement(0,halfCircle1WrtBRCorner+brCornerOfBaseNbLayer,log_halfCircle1Empty,halfCircle1EmptyName,log_baseNbLayer,false,0,true);
   log_halfCircle1Empty->SetVisAttributes(air_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Vacuum",halfCircle1EmptyName,halfCircle1Empty));
-  
+
   //------------------------------------------------------
   //HalfCircle 1 (conductor)
   G4String halfCircle1ConductorName = pName + "_halfCircle1Conductor";
   G4String halfCircle1ConductorNameSolid = halfCircle1ConductorName + "_solid";
   G4String halfCircle1ConductorNameLog = halfCircle1ConductorName + "_log";
   G4Tubs * solid_halfCircle1Conductor = new G4Tubs(halfCircle1ConductorNameSolid,dp_resonatorAssemblyCurveCentralRadius - dp_tlCouplingConductorDimY/2.0,dp_resonatorAssemblyCurveCentralRadius + dp_tlCouplingConductorDimY/2.0,dp_curveEmptyDimZ/2.0,90.*deg,180.*deg);
-  G4LogicalVolume * log_halfCircle1Conductor = new G4LogicalVolume(solid_halfCircle1Conductor,niobium_mat,halfCircle1ConductorNameLog);  
+  G4LogicalVolume * log_halfCircle1Conductor = new G4LogicalVolume(solid_halfCircle1Conductor,niobium_mat,halfCircle1ConductorNameLog);
   G4VPhysicalVolume * halfCircle1Conductor = new G4PVPlacement(0,G4ThreeVector(0,0,0),log_halfCircle1Conductor,halfCircle1ConductorName,log_halfCircle1Empty,false,0,true);
   log_halfCircle1Conductor->SetVisAttributes(niobium_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",halfCircle1ConductorName,halfCircle1Conductor));
 
 
-  
+
   //------------------------------------------------------
   //Straight horizontal line (SHL) 2, (empty/cavity)
   G4String shl2EmptyName = pName + "_shl2Empty";
@@ -536,14 +536,14 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",shl2ConductorName,shl2Conductor));
 
 
-  
+
   //------------------------------------------------------
   //HalfCircle 2 (empty/cavity)
   G4String halfCircle2EmptyName = pName + "_halfCircle2Empty";
   G4String halfCircle2EmptyNameSolid = halfCircle2EmptyName + "_solid";
   G4String halfCircle2EmptyNameLog = halfCircle2EmptyName + "_log";
   G4Tubs * solid_halfCircle2Empty = new G4Tubs(halfCircle2EmptyNameSolid,dp_resonatorAssemblyCurveSmallestRadius,dp_resonatorAssemblyCurveSmallestRadius + dp_tlCouplingEmptyDimY,dp_curveEmptyDimZ/2.0,270.*deg,180.*deg);
-  G4LogicalVolume * log_halfCircle2Empty = new G4LogicalVolume(solid_halfCircle2Empty,air_mat,halfCircle2EmptyNameLog);  
+  G4LogicalVolume * log_halfCircle2Empty = new G4LogicalVolume(solid_halfCircle2Empty,air_mat,halfCircle2EmptyNameLog);
   G4ThreeVector halfCircle2WrtBRCorner = shl2WrtBRCorner + G4ThreeVector(0.5*dp_shl2EmptyDimX,dp_resonatorAssemblyCurveCentralRadius,0.0);
   G4VPhysicalVolume * halfCircle2Empty = new G4PVPlacement(0,halfCircle2WrtBRCorner+brCornerOfBaseNbLayer,log_halfCircle2Empty,halfCircle2EmptyName,log_baseNbLayer,false,0,true);
   log_halfCircle2Empty->SetVisAttributes(air_vis);
@@ -555,11 +555,11 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4String halfCircle2ConductorNameSolid = halfCircle2ConductorName + "_solid";
   G4String halfCircle2ConductorNameLog = halfCircle2ConductorName + "_log";
   G4Tubs * solid_halfCircle2Conductor = new G4Tubs(halfCircle2ConductorNameSolid,dp_resonatorAssemblyCurveCentralRadius - dp_tlCouplingConductorDimY/2.0,dp_resonatorAssemblyCurveCentralRadius + dp_tlCouplingConductorDimY/2.0,dp_curveEmptyDimZ/2.0,270.*deg,180.*deg);
-  G4LogicalVolume * log_halfCircle2Conductor = new G4LogicalVolume(solid_halfCircle2Conductor,niobium_mat,halfCircle2ConductorNameLog);  
+  G4LogicalVolume * log_halfCircle2Conductor = new G4LogicalVolume(solid_halfCircle2Conductor,niobium_mat,halfCircle2ConductorNameLog);
   G4VPhysicalVolume * halfCircle2Conductor = new G4PVPlacement(0,G4ThreeVector(0,0,0),log_halfCircle2Conductor,halfCircle2ConductorName,log_halfCircle2Empty,false,0,true);
   log_halfCircle2Conductor->SetVisAttributes(niobium_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",halfCircle2ConductorName,halfCircle2Conductor));
-  
+
   //------------------------------------------------------
   //Straight horizontal line (SHL) 3, (empty/cavity)
   G4String shl3EmptyName = pName + "_shl3Empty";
@@ -589,20 +589,20 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4String halfCircle3EmptyNameSolid = halfCircle3EmptyName + "_solid";
   G4String halfCircle3EmptyNameLog = halfCircle3EmptyName + "_log";
   G4Tubs * solid_halfCircle3Empty = new G4Tubs(halfCircle3EmptyNameSolid,dp_resonatorAssemblyCurveSmallestRadius,dp_resonatorAssemblyCurveSmallestRadius + dp_tlCouplingEmptyDimY,dp_curveEmptyDimZ/2.0,90.*deg,180.*deg);
-  G4LogicalVolume * log_halfCircle3Empty = new G4LogicalVolume(solid_halfCircle3Empty,air_mat,halfCircle3EmptyNameLog);  
+  G4LogicalVolume * log_halfCircle3Empty = new G4LogicalVolume(solid_halfCircle3Empty,air_mat,halfCircle3EmptyNameLog);
   G4ThreeVector halfCircle3WrtBRCorner = shl3WrtBRCorner + G4ThreeVector(-0.5*dp_shl3EmptyDimX,dp_resonatorAssemblyCurveCentralRadius,0.0);
   G4VPhysicalVolume * halfCircle3Empty = new G4PVPlacement(0,halfCircle3WrtBRCorner+brCornerOfBaseNbLayer,log_halfCircle3Empty,halfCircle3EmptyName,log_baseNbLayer,false,0,true);
   log_halfCircle3Empty->SetVisAttributes(air_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Vacuum",halfCircle3EmptyName,halfCircle3Empty));
 
-  
+
   //------------------------------------------------------
   //HalfCircle 3 (conductor)
   G4String halfCircle3ConductorName = pName + "_halfCircle3Conductor";
   G4String halfCircle3ConductorNameSolid = halfCircle3ConductorName + "_solid";
   G4String halfCircle3ConductorNameLog = halfCircle3ConductorName + "_log";
   G4Tubs * solid_halfCircle3Conductor = new G4Tubs(halfCircle3ConductorNameSolid,dp_resonatorAssemblyCurveCentralRadius - dp_tlCouplingConductorDimY/2.0,dp_resonatorAssemblyCurveCentralRadius + dp_tlCouplingConductorDimY/2.0,dp_curveEmptyDimZ/2.0,90.*deg,180.*deg);
-  G4LogicalVolume * log_halfCircle3Conductor = new G4LogicalVolume(solid_halfCircle3Conductor,niobium_mat,halfCircle3ConductorNameLog);  
+  G4LogicalVolume * log_halfCircle3Conductor = new G4LogicalVolume(solid_halfCircle3Conductor,niobium_mat,halfCircle3ConductorNameLog);
   G4VPhysicalVolume * halfCircle3Conductor = new G4PVPlacement(0,G4ThreeVector(0,0,0),log_halfCircle3Conductor,halfCircle3ConductorName,log_halfCircle3Empty,false,0,true);
   log_halfCircle3Conductor->SetVisAttributes(niobium_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",halfCircle3ConductorName,halfCircle3Conductor));
@@ -637,7 +637,7 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4String halfCircle4EmptyNameSolid = halfCircle4EmptyName + "_solid";
   G4String halfCircle4EmptyNameLog = halfCircle4EmptyName + "_log";
   G4Tubs * solid_halfCircle4Empty = new G4Tubs(halfCircle4EmptyNameSolid,dp_resonatorAssemblyCurveSmallestRadius,dp_resonatorAssemblyCurveSmallestRadius + dp_tlCouplingEmptyDimY,dp_curveEmptyDimZ/2.0,270.*deg,180.*deg);
-  G4LogicalVolume * log_halfCircle4Empty = new G4LogicalVolume(solid_halfCircle4Empty,air_mat,halfCircle4EmptyNameLog);  
+  G4LogicalVolume * log_halfCircle4Empty = new G4LogicalVolume(solid_halfCircle4Empty,air_mat,halfCircle4EmptyNameLog);
   G4ThreeVector halfCircle4WrtBRCorner = shl4WrtBRCorner + G4ThreeVector(+0.5*dp_shl4EmptyDimX,dp_resonatorAssemblyCurveCentralRadius,0.0);
   G4VPhysicalVolume * halfCircle4Empty = new G4PVPlacement(0,halfCircle4WrtBRCorner+brCornerOfBaseNbLayer,log_halfCircle4Empty,halfCircle4EmptyName,log_baseNbLayer,false,0,true);
   log_halfCircle4Empty->SetVisAttributes(air_vis);
@@ -649,7 +649,7 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4String halfCircle4ConductorNameSolid = halfCircle4ConductorName + "_solid";
   G4String halfCircle4ConductorNameLog = halfCircle4ConductorName + "_log";
   G4Tubs * solid_halfCircle4Conductor = new G4Tubs(halfCircle4ConductorNameSolid,dp_resonatorAssemblyCurveCentralRadius - dp_tlCouplingConductorDimY/2.0,dp_resonatorAssemblyCurveCentralRadius + dp_tlCouplingConductorDimY/2.0,dp_curveEmptyDimZ/2.0,270.*deg,180.*deg);
-  G4LogicalVolume * log_halfCircle4Conductor = new G4LogicalVolume(solid_halfCircle4Conductor,niobium_mat,halfCircle4ConductorNameLog);  
+  G4LogicalVolume * log_halfCircle4Conductor = new G4LogicalVolume(solid_halfCircle4Conductor,niobium_mat,halfCircle4ConductorNameLog);
   G4VPhysicalVolume * halfCircle4Conductor = new G4PVPlacement(0,G4ThreeVector(0,0,0),log_halfCircle4Conductor,halfCircle4ConductorName,log_halfCircle4Empty,false,0,true);
   log_halfCircle4Conductor->SetVisAttributes(niobium_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",halfCircle4ConductorName,halfCircle4Conductor));
@@ -669,7 +669,7 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4VPhysicalVolume * shl5Empty = new G4PVPlacement(0,shl5WrtBRCorner+brCornerOfBaseNbLayer,log_shl5Empty,shl5EmptyName,log_baseNbLayer,false,0,true);
   log_shl5Empty->SetVisAttributes(air_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Vacuum",shl5EmptyName,shl5Empty));
- 
+
 
   //------------------------------------------------------
   //Straight horizontal line (SHL) 5 (conductor)
@@ -688,7 +688,7 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4String halfCircle5EmptyNameSolid = halfCircle5EmptyName + "_solid";
   G4String halfCircle5EmptyNameLog = halfCircle5EmptyName + "_log";
   G4Tubs * solid_halfCircle5Empty = new G4Tubs(halfCircle5EmptyNameSolid,dp_resonatorAssemblyCurveSmallestRadius,dp_resonatorAssemblyCurveSmallestRadius + dp_tlCouplingEmptyDimY,dp_curveEmptyDimZ/2.0,90.*deg,180.*deg);
-  G4LogicalVolume * log_halfCircle5Empty = new G4LogicalVolume(solid_halfCircle5Empty,air_mat,halfCircle5EmptyNameLog);  
+  G4LogicalVolume * log_halfCircle5Empty = new G4LogicalVolume(solid_halfCircle5Empty,air_mat,halfCircle5EmptyNameLog);
   G4ThreeVector halfCircle5WrtBRCorner = shl5WrtBRCorner + G4ThreeVector(-0.5*dp_shl5EmptyDimX,dp_resonatorAssemblyCurveCentralRadius,0.0);
   G4VPhysicalVolume * halfCircle5Empty = new G4PVPlacement(0,halfCircle5WrtBRCorner+brCornerOfBaseNbLayer,log_halfCircle5Empty,halfCircle5EmptyName,log_baseNbLayer,false,0,true);
   log_halfCircle5Empty->SetVisAttributes(air_vis);
@@ -700,7 +700,7 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4String halfCircle5ConductorNameSolid = halfCircle5ConductorName + "_solid";
   G4String halfCircle5ConductorNameLog = halfCircle5ConductorName + "_log";
   G4Tubs * solid_halfCircle5Conductor = new G4Tubs(halfCircle5ConductorNameSolid,dp_resonatorAssemblyCurveCentralRadius - dp_tlCouplingConductorDimY/2.0,dp_resonatorAssemblyCurveCentralRadius + dp_tlCouplingConductorDimY/2.0,dp_curveEmptyDimZ/2.0,90.*deg,180.*deg);
-  G4LogicalVolume * log_halfCircle5Conductor = new G4LogicalVolume(solid_halfCircle5Conductor,niobium_mat,halfCircle5ConductorNameLog);  
+  G4LogicalVolume * log_halfCircle5Conductor = new G4LogicalVolume(solid_halfCircle5Conductor,niobium_mat,halfCircle5ConductorNameLog);
   G4VPhysicalVolume * halfCircle5Conductor = new G4PVPlacement(0,G4ThreeVector(0,0,0),log_halfCircle5Conductor,halfCircle5ConductorName,log_halfCircle5Empty,false,0,true);
   log_halfCircle5Conductor->SetVisAttributes(niobium_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",halfCircle5ConductorName,halfCircle5Conductor));
@@ -744,7 +744,7 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4String halfCircle6EmptyNameSolid = halfCircle6EmptyName + "_solid";
   G4String halfCircle6EmptyNameLog = halfCircle6EmptyName + "_log";
   G4Tubs * solid_halfCircle6Empty = new G4Tubs(halfCircle6EmptyNameSolid,dp_resonatorAssemblyCurveSmallestRadius,dp_resonatorAssemblyCurveSmallestRadius + dp_tlCouplingEmptyDimY,dp_curveEmptyDimZ/2.0,270.*deg,180.*deg);
-  G4LogicalVolume * log_halfCircle6Empty = new G4LogicalVolume(solid_halfCircle6Empty,air_mat,halfCircle6EmptyNameLog);  
+  G4LogicalVolume * log_halfCircle6Empty = new G4LogicalVolume(solid_halfCircle6Empty,air_mat,halfCircle6EmptyNameLog);
   G4ThreeVector halfCircle6WrtBRCorner = shl6WrtBRCorner + G4ThreeVector(0.5*dp_shl6EmptyDimX,dp_resonatorAssemblyCurveCentralRadius,0.0);
   G4VPhysicalVolume * halfCircle6Empty = new G4PVPlacement(0,halfCircle6WrtBRCorner+brCornerOfBaseNbLayer,log_halfCircle6Empty,halfCircle6EmptyName,log_baseNbLayer,false,0,true);
   log_halfCircle6Empty->SetVisAttributes(air_vis);
@@ -756,7 +756,7 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4String halfCircle6ConductorNameSolid = halfCircle6ConductorName + "_solid";
   G4String halfCircle6ConductorNameLog = halfCircle6ConductorName + "_log";
   G4Tubs * solid_halfCircle6Conductor = new G4Tubs(halfCircle6ConductorNameSolid,dp_resonatorAssemblyCurveCentralRadius - dp_tlCouplingConductorDimY/2.0,dp_resonatorAssemblyCurveCentralRadius + dp_tlCouplingConductorDimY/2.0,dp_curveEmptyDimZ/2.0,270.*deg,180.*deg);
-  G4LogicalVolume * log_halfCircle6Conductor = new G4LogicalVolume(solid_halfCircle6Conductor,niobium_mat,halfCircle6ConductorNameLog);  
+  G4LogicalVolume * log_halfCircle6Conductor = new G4LogicalVolume(solid_halfCircle6Conductor,niobium_mat,halfCircle6ConductorNameLog);
   G4VPhysicalVolume * halfCircle6Conductor = new G4PVPlacement(0,G4ThreeVector(0,0,0),log_halfCircle6Conductor,halfCircle6ConductorName,log_halfCircle6Empty,false,0,true);
   log_halfCircle6Conductor->SetVisAttributes(niobium_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",halfCircle6ConductorName,halfCircle6Conductor));
@@ -792,7 +792,7 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4String curve3EmptyNameSolid = curve3EmptyName + "_solid";
   G4String curve3EmptyNameLog = curve3EmptyName + "_log";
   G4Tubs * solid_curve3Empty = new G4Tubs(curve3EmptyNameSolid,dp_resonatorAssemblyCurveSmallestRadius,dp_resonatorAssemblyCurveSmallestRadius + dp_tlCouplingEmptyDimY,dp_curveEmptyDimZ/2.0,180.*deg,90.*deg);
-  G4LogicalVolume * log_curve3Empty = new G4LogicalVolume(solid_curve3Empty,air_mat,curve3EmptyNameLog);  
+  G4LogicalVolume * log_curve3Empty = new G4LogicalVolume(solid_curve3Empty,air_mat,curve3EmptyNameLog);
   G4ThreeVector curve3WrtBRCorner = shl7WrtBRCorner + G4ThreeVector(-0.5*dp_shl7EmptyDimX,dp_resonatorAssemblyCurveCentralRadius,0.0); //Good for empty or conductor
   G4VPhysicalVolume * curve3Empty = new G4PVPlacement(0,curve3WrtBRCorner+brCornerOfBaseNbLayer,log_curve3Empty,curve3EmptyName,log_baseNbLayer,false,0,true);
   log_curve3Empty->SetVisAttributes(air_vis);
@@ -805,7 +805,7 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4String curve3ConductorNameSolid = curve3ConductorName + "_solid";
   G4String curve3ConductorNameLog = curve3ConductorName + "_log";
   G4Tubs * solid_curve3Conductor = new G4Tubs(curve3ConductorNameSolid,dp_resonatorAssemblyCurveCentralRadius - dp_tlCouplingConductorDimY/2.0,dp_resonatorAssemblyCurveCentralRadius + dp_tlCouplingConductorDimY/2.0,dp_curveEmptyDimZ/2.0,180.*deg,90.*deg);
-  G4LogicalVolume * log_curve3Conductor = new G4LogicalVolume(solid_curve3Conductor,niobium_mat,curve3ConductorNameLog);  
+  G4LogicalVolume * log_curve3Conductor = new G4LogicalVolume(solid_curve3Conductor,niobium_mat,curve3ConductorNameLog);
   G4VPhysicalVolume * curve3Conductor = new G4PVPlacement(0,G4ThreeVector(0,0,0),log_curve3Conductor,curve3ConductorName,log_curve3Empty,false,0,true);
   log_curve3Conductor->SetVisAttributes(niobium_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",curve3ConductorName,curve3Conductor));
@@ -813,7 +813,7 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
 
 
 
-  
+
   //------------------------------------------------------
   //Straight vertical line (SVL) 1, (empty/cavity)
   G4String svl1EmptyName = pName + "_svl1Empty";
@@ -851,14 +851,14 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4Box * solid_shuntCouplerLeftLobeEmpty = new G4Box("shuntCouplerLeftLobeEmpty",0.5 * dp_shuntCouplerLobeEmptyDimX,0.5* dp_shuntCouplerLobeEmptyDimY, 0.5* dp_shuntCouplerLobeEmptyDimZ);
   G4Box * solid_shuntCouplerRightLobeEmpty = new G4Box("shuntCouplerRightLobeEmpty",0.5 * dp_shuntCouplerLobeEmptyDimX,0.5* dp_shuntCouplerLobeEmptyDimY, 0.5* dp_shuntCouplerLobeEmptyDimZ);
   G4UnionSolid * solid_shuntCouplerMerge1Empty = new G4UnionSolid("shuntCouplerHorizontalPlusLeft",solid_shuntCouplerHorizontalEmpty,solid_shuntCouplerLeftLobeEmpty,0,G4ThreeVector(-0.5*dp_shuntCouplerHorizontalEmptyDimX + 0.5*dp_shuntCouplerLobeEmptyDimX,0.5*(dp_shuntCouplerHorizontalEmptyDimY+dp_shuntCouplerLobeEmptyDimY),0));
-  G4UnionSolid * solid_shuntCouplerEmpty = new G4UnionSolid(shuntCouplerEmptyNameSolid,solid_shuntCouplerMerge1Empty,solid_shuntCouplerRightLobeEmpty,0,G4ThreeVector(0.5*dp_shuntCouplerHorizontalEmptyDimX - 0.5*dp_shuntCouplerLobeEmptyDimX,0.5*(dp_shuntCouplerHorizontalEmptyDimY+dp_shuntCouplerLobeEmptyDimY),0));    
-  G4LogicalVolume * log_shuntCouplerEmpty = new G4LogicalVolume(solid_shuntCouplerEmpty,air_mat,shuntCouplerEmptyNameLog);  
+  G4UnionSolid * solid_shuntCouplerEmpty = new G4UnionSolid(shuntCouplerEmptyNameSolid,solid_shuntCouplerMerge1Empty,solid_shuntCouplerRightLobeEmpty,0,G4ThreeVector(0.5*dp_shuntCouplerHorizontalEmptyDimX - 0.5*dp_shuntCouplerLobeEmptyDimX,0.5*(dp_shuntCouplerHorizontalEmptyDimY+dp_shuntCouplerLobeEmptyDimY),0));
+  G4LogicalVolume * log_shuntCouplerEmpty = new G4LogicalVolume(solid_shuntCouplerEmpty,air_mat,shuntCouplerEmptyNameLog);
   G4ThreeVector shuntCouplerEmptyWrtBRCorner = svl1WrtBRCorner + G4ThreeVector(0,0.5*(dp_shuntCouplerHorizontalEmptyDimY+dp_svl1EmptyDimY),0);
   G4VPhysicalVolume * shuntCouplerEmpty = new G4PVPlacement(0,shuntCouplerEmptyWrtBRCorner+brCornerOfBaseNbLayer,log_shuntCouplerEmpty,shuntCouplerEmptyName,log_baseNbLayer,false,0,true);
   log_shuntCouplerEmpty->SetVisAttributes(air_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Vacuum",shuntCouplerEmptyName,shuntCouplerEmpty));
-  
-  
+
+
   //------------------------------------------------------
   //Shunt coupler horizontal (conductor)
   G4String shuntCouplerConductorName = pName + "_shuntCouplerConductor";
@@ -870,19 +870,19 @@ void RISQTutorialResonatorAssembly::MakeResonatorLine(G4String pName, G4LogicalV
   G4Box * solid_shuntCouplerLeftLobeConductor = new G4Box("shuntCouplerLeftLobeConductor",0.5 * dp_shuntCouplerLobeConductorDimX,0.5* dp_shuntCouplerLobeConductorDimY, 0.5* dp_shuntCouplerLobeConductorDimZ);
   G4Box * solid_shuntCouplerRightLobeConductor = new G4Box("shuntCouplerRightLobeConductor",0.5 * dp_shuntCouplerLobeConductorDimX,0.5* dp_shuntCouplerLobeConductorDimY, 0.5* dp_shuntCouplerLobeConductorDimZ);
   G4UnionSolid * solid_shuntCouplerMerge2Conductor = new G4UnionSolid("shuntCouplerHorizontalPlusNubPlusLeft",solid_shuntCouplerHorizontalConductor,solid_shuntCouplerLeftLobeConductor,0,G4ThreeVector(-0.5*dp_shuntCouplerHorizontalConductorDimX + 0.5*dp_shuntCouplerLobeConductorDimX,0.5*(dp_shuntCouplerHorizontalConductorDimY+dp_shuntCouplerLobeConductorDimY),0));
-  G4UnionSolid * solid_shuntCouplerConductor = new G4UnionSolid(shuntCouplerConductorNameSolid,solid_shuntCouplerMerge2Conductor,solid_shuntCouplerRightLobeConductor,0,G4ThreeVector(0.5*dp_shuntCouplerHorizontalConductorDimX - 0.5*dp_shuntCouplerLobeConductorDimX,0.5*(dp_shuntCouplerHorizontalConductorDimY+dp_shuntCouplerLobeConductorDimY),0));      
+  G4UnionSolid * solid_shuntCouplerConductor = new G4UnionSolid(shuntCouplerConductorNameSolid,solid_shuntCouplerMerge2Conductor,solid_shuntCouplerRightLobeConductor,0,G4ThreeVector(0.5*dp_shuntCouplerHorizontalConductorDimX - 0.5*dp_shuntCouplerLobeConductorDimX,0.5*(dp_shuntCouplerHorizontalConductorDimY+dp_shuntCouplerLobeConductorDimY),0));
   G4LogicalVolume * log_shuntCouplerConductor = new G4LogicalVolume(solid_shuntCouplerConductor,niobium_mat,shuntCouplerConductorNameLog);
   G4VPhysicalVolume * shuntCouplerConductor = new G4PVPlacement(0,G4ThreeVector(0,0,0),log_shuntCouplerConductor,shuntCouplerConductorName,log_shuntCouplerEmpty,false,0,true);
   log_shuntCouplerConductor->SetVisAttributes(niobium_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",shuntCouplerConductorName,shuntCouplerConductor));
- 
-  
-									  
-  
-  
-  
+
+
+
+
+
+
 }
-  
+
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

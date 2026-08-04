@@ -70,13 +70,13 @@ RISQTutorialTransmissionLine::RISQTutorialTransmissionLine(G4RotationMatrix * pR
 			    pCopyNo,
 			    pSurfChk);
 
-  
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 // Default Constructor
 RISQTutorialTransmissionLine::RISQTutorialTransmissionLine()
-{  
+{
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -107,9 +107,9 @@ void RISQTutorialTransmissionLine::ConstructTransmissionLine(G4RotationMatrix * 
   niobium_vis->SetVisibility(true);
   G4VisAttributes* air_vis= new G4VisAttributes(G4Colour(0.5,0.5,0.5,0.5));
   air_vis->SetVisibility(true);
-  
 
-  
+
+
 
   //------------------------------------------------------------------------------------------
   //Start with a base layer of niobium into which our objects will fit. We'll return this in the end.
@@ -121,34 +121,34 @@ void RISQTutorialTransmissionLine::ConstructTransmissionLine(G4RotationMatrix * 
   //to have to form a g4union object from the external pad shapes and use this as our base layer.
   G4UnionSolid * solid_baseNbLayer = CreatePieceBasedNbLayer(baseNbLayerNameSolid);
 
-  
+
   //Now attribute a physical material to the housing
   G4LogicalVolume * log_baseNbLayer = new G4LogicalVolume(solid_baseNbLayer,
 							  niobium_mat,
 							  baseNbLayerNameLog);
-  log_baseNbLayer->SetVisAttributes(G4VisAttributes::Invisible);//niobium_vis);
+  log_baseNbLayer->SetVisAttributes(G4VisAttributes::GetInvisible());//niobium_vis);
 
   //Now, create a physical volume and G4PVPlacement for storing as the final output. This is the
   //top volume.
   G4VPhysicalVolume* phys_baseNbLayer = new G4PVPlacement(pRot,
 							  tLate,
 							  log_baseNbLayer,
-							  baseNbLayerName, 
+							  baseNbLayerName,
 							  pMotherLogical,
 							  pMany,
 							  pCopyNo,
 							  pSurfChk);
-  
+
   //Push this sub volume (the niobium base layer) back into the fundamental volume list
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",baseNbLayerName,phys_baseNbLayer));
-  
+
 
 
 
   //------------------------------------------------------------------------------------------
   //Now make the pads of the transmission line. The logical mother volume of these is the base
   //Nb layer. Pads come with their own visualization attributes already set.
-  
+
   //Pad 1:
   G4String pad1Name = pName + "_TransmissionLinePad1";
   RISQTutorialPad * pad1 = new RISQTutorialPad(0,
@@ -164,7 +164,7 @@ void RISQTutorialTransmissionLine::ConstructTransmissionLine(G4RotationMatrix * 
   //Loop through the fundamental sub-volumes and push them back into the fundamental subvolume list for the transmission line. We have to do this here
   //because the pads are composite volumes
   AddComplexGeometryPadSubVolumesToThisList(pad1);
-  
+
 
   //Pad 2: rotate around Z axis by 180 degrees
   G4String pad2Name = pName + "_TransmissionLinePad2";
@@ -179,15 +179,15 @@ void RISQTutorialTransmissionLine::ConstructTransmissionLine(G4RotationMatrix * 
 							       checkOverlaps);
   G4LogicalVolume * log_pad2 = pad1->GetLogicalVolume();
   G4VPhysicalVolume * phys_pad2 = pad1->GetPhysicalVolume();
-  
+
   //Loop through the fundamental sub-volumes and push them back into the fundamental subvolume list for the transmission line. We have to do this here
   //because the pads are composite volumes
   AddComplexGeometryPadSubVolumesToThisList(pad2);
-  
-  
 
 
-  
+
+
+
   //------------------------------------------------------------------------------------------
   //Now make the transmission line itself, in two parts: empty and conductor. The logical
   //mother volume of this is the base Ni layer.
@@ -203,8 +203,8 @@ void RISQTutorialTransmissionLine::ConstructTransmissionLine(G4RotationMatrix * 
   G4LogicalVolume * log_transmissionLineEmpty = new G4LogicalVolume(solid_transmissionLineEmpty,
 								    air_mat,
 								    tlNameEmptyLog);
-  log_transmissionLineEmpty->SetVisAttributes(air_vis);//G4VisAttributes::Invisible);
-  
+  log_transmissionLineEmpty->SetVisAttributes(air_vis);//G4VisAttributes::GetInvisible());
+
   G4VPhysicalVolume * phys_transmissionLineEmpty = new G4PVPlacement(0,
 								     G4ThreeVector(0,0,0),
 								     log_transmissionLineEmpty,
@@ -217,7 +217,7 @@ void RISQTutorialTransmissionLine::ConstructTransmissionLine(G4RotationMatrix * 
 
 
 
-  
+
   G4String tlNameConductor = pName + "_TransmissionLineConductor";
   G4String tlNameConductorSolid = tlNameConductor + "_solid";
   G4String tlNameConductorLog = tlNameConductor + "_log";
@@ -225,12 +225,12 @@ void RISQTutorialTransmissionLine::ConstructTransmissionLine(G4RotationMatrix * 
 						      0.5 * (dp_transmissionLinePad2Offset - dp_transmissionLinePad1Offset - 2 * dp_padEmptyPart2TrdZ - 2 * 0.5 * dp_padEmptyPart1DimX),
 						      0.5 * dp_transmissionLineConductorWidth,
 						      0.5 * dp_transmissionLineBaseLayerDimZ);
-  
+
   G4LogicalVolume * log_transmissionLineConductor = new G4LogicalVolume(solid_transmissionLineConductor,
 									niobium_mat,
 									tlNameConductorLog);
   log_transmissionLineConductor->SetVisAttributes(niobium_vis);
-  
+
   G4VPhysicalVolume * phys_transmissionLineConductor = new G4PVPlacement(0,
 									 G4ThreeVector(0,0,0),
 									 log_transmissionLineConductor,
@@ -241,7 +241,7 @@ void RISQTutorialTransmissionLine::ConstructTransmissionLine(G4RotationMatrix * 
 									 true);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",tlNameConductor,phys_transmissionLineConductor));
 
-  
+
 
 
 
@@ -261,11 +261,11 @@ void RISQTutorialTransmissionLine::ConstructTransmissionLine(G4RotationMatrix * 
   */
 
 
-  
+
 
 }
 
-  
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //Used for building the base layer for the Niobium. Can't be a pure rectangle because that rectangle
@@ -290,7 +290,7 @@ G4UnionSolid * RISQTutorialTransmissionLine::CreatePieceBasedNbLayer(G4String na
 						   solid_padEmptyPart2,
 						   rotEmptyPart2,
 						   transPart2EmptyWrtPart1Empty);
-  
+
   G4Box * solid_transmissionLineEmpty = new G4Box("BaseNbLayerTransmissionLineSolid",
 						  0.5 * (dp_transmissionLinePad2Offset - dp_transmissionLinePad1Offset - 2 * dp_padEmptyPart2TrdZ - 2 * 0.5 * dp_padEmptyPart1DimX),
 						  0.5 * dp_transmissionLineCavityFullWidth,
@@ -311,7 +311,7 @@ G4UnionSolid * RISQTutorialTransmissionLine::CreatePieceBasedNbLayer(G4String na
 						      G4ThreeVector(dp_transmissionLinePad2Offset,0,0));
 
   return solid_baseNbLayer;
-  
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

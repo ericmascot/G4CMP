@@ -190,7 +190,7 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
   G4VSolid *solid_world = new G4Box("World", 55. * cm, 55. * cm, 55. * cm);
   G4LogicalVolume *log_world = new G4LogicalVolume(solid_world, fLiquidHelium, "World");
   //  worldLogical->SetUserLimits(new G4UserLimits(10*mm, DBL_MAX, DBL_MAX, 0, 0));
-  log_world->SetVisAttributes(G4VisAttributes::Invisible);
+  log_world->SetVisAttributes(G4VisAttributes::GetInvisible());
   fWorldPhys = new G4PVPlacement(0,
                                  G4ThreeVector(),
                                  log_world,

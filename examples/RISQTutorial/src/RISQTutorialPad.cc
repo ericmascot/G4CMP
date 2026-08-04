@@ -69,13 +69,13 @@ RISQTutorialPad::RISQTutorialPad(G4RotationMatrix * pRot,
 			pCopyNo,
 			pSurfChk);
 
-  
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 // Default Constructor
 RISQTutorialPad::RISQTutorialPad()
-{  
+{
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -105,7 +105,7 @@ void RISQTutorialPad::ConstructPad(G4RotationMatrix * pRot,
   niobium_vis->SetVisibility(true);
   G4VisAttributes* air_vis= new G4VisAttributes(G4Colour(0.5,0.5,0.5,0.5));
   air_vis->SetVisibility(true);
-  
+
 
   //------------------------------------------------------------------------------------------
   //For the pad, we start with a volume of air with the same dimensions as the niobium substrate.
@@ -168,7 +168,7 @@ void RISQTutorialPad::ConstructPad(G4RotationMatrix * pRot,
 					      0.5 * dp_padPart2TrdY2,
 					      0.5 * dp_padPart2TrdZ);
 
-  
+
   //We need to rotate the part 2 so that it can be aligned and placed next to part 1
   G4RotationMatrix * rotPart2 = new G4RotationMatrix();
   rotPart2->rotateX(90.*deg);
@@ -189,28 +189,28 @@ void RISQTutorialPad::ConstructPad(G4RotationMatrix * pRot,
   //We now create a shift the non-empty pad and place it inside:
   G4ThreeVector transPadWrtEmptyPad(dp_padPart2InternalShiftX,0,0);
 
-  
 
- 
+
+
   ///////////////////////////////////////////
   // Logical and Physical Volume Creation
   //-----------------------------------------
   // Done after one solid object subsuming all of the geometry has been made.
 
-  
+
   //Now attribute a physical material to the housing
   G4LogicalVolume * log_padEmpty = new G4LogicalVolume(solid_padEmpty,
 						       air_mat, //Test for now
 						       padEmptyNameLog);
-  log_padEmpty->SetVisAttributes(air_vis);//G4VisAttributes::Invisible);
-  
+  log_padEmpty->SetVisAttributes(air_vis);//G4VisAttributes::GetInvisible());
+
 
   G4LogicalVolume * log_padConductor = new G4LogicalVolume(solid_padConductor,
 							   niobium_mat,
 							   padConductorNameLog);
   log_padConductor->SetVisAttributes(niobium_vis);
-  
-  
+
+
   //Now, create a physical volume and G4PVPlacement for storing as the final output
   G4VPhysicalVolume* phys_padConductor = new G4PVPlacement(0,
 							   transPadWrtEmptyPad,
@@ -220,11 +220,11 @@ void RISQTutorialPad::ConstructPad(G4RotationMatrix * pRot,
 							   false,
 							   0,
 							   true);
-  
+
   G4VPhysicalVolume* phys_padEmpty = new G4PVPlacement(pRot,
 						       tLate,
 						       log_padEmpty,
-						       padEmptyName, 
+						       padEmptyName,
 						       pMotherLogical,
 						       pMany,
 						       pCopyNo,
@@ -234,10 +234,10 @@ void RISQTutorialPad::ConstructPad(G4RotationMatrix * pRot,
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Vacuum",padEmptyName,phys_padEmpty));
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",padConductorName,phys_padConductor));
 
-  
-  
-  
-  /*  
+
+
+
+  /*
   G4VisAttributes* simpleBoxVisAtt= new G4VisAttributes(G4Colour(1.0,0.0,0.0,0.9));
   simpleBoxVisAtt->SetVisibility(true);
   log_pad->SetVisAttributes(simpleBoxVisAtt);
@@ -247,16 +247,16 @@ void RISQTutorialPad::ConstructPad(G4RotationMatrix * pRot,
   log_padEmpty->SetVisAttributes(simpleBoxVisAtt2);
   */
 
-  
 
 
-  
+
+
   // Lastly, make the logical volume and physical volume of the top/mother object accessible data members
   fLog_output = log_padEmpty;
   fPhys_output = phys_padEmpty;
 
 
-  
+
 
 }
 

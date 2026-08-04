@@ -71,13 +71,13 @@ RISQTutorialCornerFluxLine::RISQTutorialCornerFluxLine(G4RotationMatrix * pRot,
 			    pCopyNo,
 			    pSurfChk);
 
-  
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 // Default Constructor
 RISQTutorialCornerFluxLine::RISQTutorialCornerFluxLine()
-{  
+{
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -108,9 +108,9 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
   niobium_vis->SetVisibility(true);
   G4VisAttributes* air_vis= new G4VisAttributes(G4Colour(0.5,0.5,0.5,0.5));
   air_vis->SetVisibility(true);
-  
 
-  
+
+
 
   //------------------------------------------------------------------------------------------
   //Start with a base layer of niobium into which our objects will fit. We'll return this in the end.
@@ -126,14 +126,14 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
   G4LogicalVolume * log_baseNbLayer = new G4LogicalVolume(solid_baseNbLayer,
 							  niobium_mat,
 							  baseNbLayerNameLog);
-  log_baseNbLayer->SetVisAttributes(G4VisAttributes::Invisible);//niobium_vis);
+  log_baseNbLayer->SetVisAttributes(G4VisAttributes::GetInvisible());//niobium_vis);
 
   //Now, create a physical volume and G4PVPlacement for storing as the final output. This is the
   //top volume.
   G4VPhysicalVolume* phys_baseNbLayer = new G4PVPlacement(pRot,
 							  tLate,
 							  log_baseNbLayer,
-							  baseNbLayerName, 
+							  baseNbLayerName,
 							  pMotherLogical,
 							  pMany,
 							  pCopyNo,
@@ -145,7 +145,7 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
   //------------------------------------------------------------------------------------------
   //Now make the pad of the flux line. The logical mother volume of these is the base
   //Nb layer. Pads come with their own visualization attributes already set.
-  
+
   //Pad 1:
   double cornerFluxLinePadCenterOffsetFromTopOrSide = pow(pow((0.5*dp_padEmptyPart1DimX),2) + pow(0.5*dp_padEmptyPart1DimY,2),0.5);//Pow is not const...
   double cornerFluxLinePadOffsetY = 0.5*dp_cornerFluxLineBaseNbLayerDimY - cornerFluxLinePadCenterOffsetFromTopOrSide;
@@ -163,7 +163,7 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
   G4LogicalVolume * log_pad1 = pad1->GetLogicalVolume();
   G4VPhysicalVolume * phys_pad1 = pad1->GetPhysicalVolume();
   AddComplexGeometryPadSubVolumesToThisList(pad1);
-  
+
 
   //------------------------------------------------------------------------------------------
   //Now make the flux line itself, in several parts:
@@ -177,14 +177,14 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
   double cornerFluxLineCurve1WrtBaseLayerX = dp_cornerFluxLineCurve1WrtPadCenterX + cornerFluxLinePadOffsetX;
   double cornerFluxLineCurve1WrtBaseLayerY = dp_cornerFluxLineCurve1WrtPadCenterY + cornerFluxLinePadOffsetY;
 
-  
+
   //Curve 1, empty part
   G4String curve1NameEmpty = pName + "_curve1Empty";
   G4String curve1NameEmptySolid = curve1NameEmpty + "_solid";
   G4String curve1NameEmptyLog = curve1NameEmpty + "_log";
   G4Tubs * solid_curve1Empty = new G4Tubs(curve1NameEmptySolid,dp_cornerFluxLineCurveRadius - dp_fluxLineEmptyDimX/2.0, dp_cornerFluxLineCurveRadius + dp_fluxLineEmptyDimX/2.0,dp_curveEmptyDimZ/2.0,225.0*deg,45.0*deg);
 
-  G4LogicalVolume * log_curve1Empty = new G4LogicalVolume(solid_curve1Empty,air_mat,curve1NameEmptyLog);  
+  G4LogicalVolume * log_curve1Empty = new G4LogicalVolume(solid_curve1Empty,air_mat,curve1NameEmptyLog);
   G4ThreeVector curve1EmptyWrtBaseLayerCenter(cornerFluxLineCurve1WrtBaseLayerX,cornerFluxLineCurve1WrtBaseLayerY,0.0);
   G4VPhysicalVolume * curve1Empty = new G4PVPlacement(0,curve1EmptyWrtBaseLayerCenter,log_curve1Empty,curve1NameEmpty,log_baseNbLayer,false,0,true);
   log_curve1Empty->SetVisAttributes(air_vis);
@@ -197,7 +197,7 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
   G4String curve1NameConductorLog = curve1NameConductor + "_log";
   G4Tubs * solid_curve1Conductor = new G4Tubs(curve1NameConductorSolid,dp_cornerFluxLineCurveRadius - dp_fluxLineConductorDimX/2.0, dp_cornerFluxLineCurveRadius + dp_fluxLineConductorDimX/2.0,dp_curveEmptyDimZ/2.0,225.0*deg,45.0*deg);
 
-  G4LogicalVolume * log_curve1Conductor = new G4LogicalVolume(solid_curve1Conductor,niobium_mat,curve1NameConductorLog);  
+  G4LogicalVolume * log_curve1Conductor = new G4LogicalVolume(solid_curve1Conductor,niobium_mat,curve1NameConductorLog);
   G4VPhysicalVolume * curve1Conductor = new G4PVPlacement(0,G4ThreeVector(0,0,0),log_curve1Conductor,curve1NameConductor,log_curve1Empty,false,0,true);
   log_curve1Conductor->SetVisAttributes(niobium_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",curve1NameConductor,curve1Conductor));
@@ -210,7 +210,7 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
   G4String horizontalNameEmptyLog = horizontalNameEmpty + "_log";
   G4Box * solid_horizontalEmpty = new G4Box(horizontalNameEmptySolid,0.5*dp_cornerFluxLineHorizontalEmptyDimX,0.5*dp_cornerFluxLineHorizontalEmptyDimY,0.5*dp_cornerFluxLineHorizontalEmptyDimZ);
 
-  G4LogicalVolume * log_horizontalEmpty = new G4LogicalVolume(solid_horizontalEmpty,air_mat,horizontalNameEmptyLog);  
+  G4LogicalVolume * log_horizontalEmpty = new G4LogicalVolume(solid_horizontalEmpty,air_mat,horizontalNameEmptyLog);
   G4ThreeVector horizontalEmptyWrtCurve1Empty(0.5*dp_cornerFluxLineHorizontalEmptyDimX,-dp_cornerFluxLineCurveRadius,0.0);
   G4VPhysicalVolume * horizontalEmpty = new G4PVPlacement(0,horizontalEmptyWrtCurve1Empty+curve1EmptyWrtBaseLayerCenter,log_horizontalEmpty,horizontalNameEmpty,log_baseNbLayer,false,0,true);
   log_horizontalEmpty->SetVisAttributes(air_vis);
@@ -223,7 +223,7 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
   G4String horizontalNameConductorLog = horizontalNameConductor + "_log";
   G4Box * solid_horizontalConductor = new G4Box(horizontalNameConductorSolid,0.5*dp_cornerFluxLineHorizontalConductorDimX,0.5*dp_cornerFluxLineHorizontalConductorDimY,0.5*dp_cornerFluxLineHorizontalConductorDimZ);
 
-  G4LogicalVolume * log_horizontalConductor = new G4LogicalVolume(solid_horizontalConductor,niobium_mat,horizontalNameConductorLog);  
+  G4LogicalVolume * log_horizontalConductor = new G4LogicalVolume(solid_horizontalConductor,niobium_mat,horizontalNameConductorLog);
   G4VPhysicalVolume * horizontalConductor = new G4PVPlacement(0,G4ThreeVector(0,0,0),log_horizontalConductor,horizontalNameConductor,log_horizontalEmpty,false,0,true);
   log_horizontalConductor->SetVisAttributes(niobium_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",horizontalNameConductor,horizontalConductor));
@@ -235,7 +235,7 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
   G4String curve2NameEmptyLog = curve2NameEmpty + "_log";
   G4Tubs * solid_curve2Empty = new G4Tubs(curve2NameEmptySolid,dp_cornerFluxLineCurveRadius - dp_fluxLineEmptyDimX/2.0, dp_cornerFluxLineCurveRadius + dp_fluxLineEmptyDimX/2.0,dp_curveEmptyDimZ/2.0,0.0*deg,90.0*deg);
 
-  G4LogicalVolume * log_curve2Empty = new G4LogicalVolume(solid_curve2Empty,air_mat,curve2NameEmptyLog);  
+  G4LogicalVolume * log_curve2Empty = new G4LogicalVolume(solid_curve2Empty,air_mat,curve2NameEmptyLog);
   G4ThreeVector curve2EmptyWrtHorizontalEmpty(0.5*dp_cornerFluxLineHorizontalEmptyDimX,-dp_cornerFluxLineCurveRadius,0.0);
   G4VPhysicalVolume * curve2Empty = new G4PVPlacement(0,curve2EmptyWrtHorizontalEmpty+horizontalEmptyWrtCurve1Empty+curve1EmptyWrtBaseLayerCenter,log_curve2Empty,curve2NameEmpty,log_baseNbLayer,false,0,true);
   log_curve2Empty->SetVisAttributes(air_vis);
@@ -249,7 +249,7 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
   G4String curve2NameConductorLog = curve2NameConductor + "_log";
   G4Tubs * solid_curve2Conductor = new G4Tubs(curve2NameConductorSolid,dp_cornerFluxLineCurveRadius - dp_fluxLineConductorDimX/2.0, dp_cornerFluxLineCurveRadius + dp_fluxLineConductorDimX/2.0,dp_curveEmptyDimZ/2.0,0.0*deg,90.0*deg);
 
-  G4LogicalVolume * log_curve2Conductor = new G4LogicalVolume(solid_curve2Conductor,niobium_mat,curve2NameConductorLog);  
+  G4LogicalVolume * log_curve2Conductor = new G4LogicalVolume(solid_curve2Conductor,niobium_mat,curve2NameConductorLog);
   G4VPhysicalVolume * curve2Conductor = new G4PVPlacement(0,G4ThreeVector(0,0,0),log_curve2Conductor,curve2NameConductor,log_curve2Empty,false,0,true);
   log_curve2Conductor->SetVisAttributes(niobium_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",curve2NameConductor,curve2Conductor));
@@ -264,7 +264,7 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
   G4String verticalNameEmptyLog = verticalNameEmpty + "_log";
   G4Box * solid_verticalEmpty = new G4Box(verticalNameEmptySolid,0.5*dp_cornerFluxLineVerticalEmptyDimX,0.5*dp_cornerFluxLineVerticalEmptyDimY,0.5*dp_cornerFluxLineVerticalEmptyDimZ);
 
-  G4LogicalVolume * log_verticalEmpty = new G4LogicalVolume(solid_verticalEmpty,air_mat,verticalNameEmptyLog);  
+  G4LogicalVolume * log_verticalEmpty = new G4LogicalVolume(solid_verticalEmpty,air_mat,verticalNameEmptyLog);
   G4ThreeVector verticalEmptyWrtCurve2Empty(dp_cornerFluxLineCurveRadius,-0.5*dp_cornerFluxLineVerticalEmptyDimY,0.0);
   G4VPhysicalVolume * verticalEmpty = new G4PVPlacement(0,verticalEmptyWrtCurve2Empty+curve2EmptyWrtHorizontalEmpty+horizontalEmptyWrtCurve1Empty+curve1EmptyWrtBaseLayerCenter,log_verticalEmpty,verticalNameEmpty,log_baseNbLayer,false,0,true);
   log_verticalEmpty->SetVisAttributes(air_vis);
@@ -275,8 +275,8 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
   verticalEmpty->CheckOverlaps(1000000,0,true);
   std::cout << "---...............^^^^^" << std::endl;
   */
-  
-  
+
+
 
   //Vertical line, conductor part
   G4String verticalNameConductor = pName + "_verticalConductor";
@@ -284,7 +284,7 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
   G4String verticalNameConductorLog = verticalNameConductor + "_log";
   G4Box * solid_verticalConductor = new G4Box(verticalNameConductorSolid,0.5*dp_cornerFluxLineVerticalConductorDimX,0.5*dp_cornerFluxLineVerticalConductorDimY,0.5*dp_cornerFluxLineVerticalConductorDimZ);
 
-  G4LogicalVolume * log_verticalConductor = new G4LogicalVolume(solid_verticalConductor,niobium_mat,verticalNameConductorLog);  
+  G4LogicalVolume * log_verticalConductor = new G4LogicalVolume(solid_verticalConductor,niobium_mat,verticalNameConductorLog);
   G4VPhysicalVolume * verticalConductor = new G4PVPlacement(0,G4ThreeVector(0,0,0),log_verticalConductor,verticalNameConductor,log_verticalEmpty,false,0,true);
   log_verticalConductor->SetVisAttributes(niobium_vis);
   fFundamentalVolumeList.push_back(std::tuple<std::string,G4String,G4VPhysicalVolume*>("Niobium",verticalNameConductor,verticalConductor));
@@ -301,7 +301,7 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
 
 
 
-  
+
 
 
   /*
@@ -310,7 +310,7 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
   G4String curve1EmptyNameSolid = curve1EmptyName + "_solid";
   G4String curve1EmptyNameLog = curve1EmptyName + "_log";
   G4Tubs * solid_curve1Empty = new G4Tubs(curve1EmptyNameSolid,dp_resonatorAssemblyCurveSmallestRadius,dp_resonatorAssemblyCurveSmallestRadius + dp_tlCouplingEmptyDimY,dp_curveEmptyDimZ/2.0,180.*deg,90.*deg);
-  G4LogicalVolume * log_curve1Empty = new G4LogicalVolume(solid_curve1Empty,air_mat,curve1EmptyNameLog);  
+  G4LogicalVolume * log_curve1Empty = new G4LogicalVolume(solid_curve1Empty,air_mat,curve1EmptyNameLog);
   G4ThreeVector curve1WrtBRCorner(-1*dp_tlCouplingEmptyDimX,0.5*dp_tlCouplingEmptyDimY + dp_resonatorAssemblyBaseNbEdgeBottomDimY + dp_resonatorAssemblyCurveCentralRadius,0.0); //Good for empty or conductor
   G4VPhysicalVolume * curve1Empty = new G4PVPlacement(0,curve1WrtBRCorner+brCornerOfBaseNbLayer,log_curve1Empty,curve1EmptyName,log_baseNbLayer,false,0,true);
   log_curve1Empty->SetVisAttributes(air_vis);
@@ -321,7 +321,7 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
 					  0.5 * dp_fluxLineEmptyDimX,
 					  0.5 * dp_fluxLineEmptyDimY,
 					  0.5 * dp_fluxLineEmptyDimZ);
-  
+
   G4LogicalVolume * log_fluxLineEmpty = new G4LogicalVolume(solid_fluxLineEmpty,
 							    air_mat,
 							    flNameEmptyLog);
@@ -334,15 +334,15 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
 							     0,
 							     true);
   log_fluxLineEmpty->SetVisAttributes(air_vis);
-  
-  
+
+
   G4String flNameConductor = pName + "_FluxLineConductor";
   G4String flNameConductorSolid = flNameConductor + "_solid";
   G4String flNameConductorLog = flNameConductor + "_log";
   G4Box * solid_fluxLineConductor = new G4Box(flNameConductorSolid,
 					      0.5 * dp_fluxLineConductorDimX,
 					      0.5 * dp_fluxLineConductorDimY,
-					      0.5 * dp_fluxLineConductorDimZ);  
+					      0.5 * dp_fluxLineConductorDimZ);
   G4LogicalVolume * log_fluxLineConductor = new G4LogicalVolume(solid_fluxLineConductor,
 								niobium_mat,
 								flNameConductorLog);
@@ -354,9 +354,9 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
 								 false,
 								 0,
 								 true);
-  log_fluxLineConductor->SetVisAttributes(niobium_vis);  
-  */  
-  
+  log_fluxLineConductor->SetVisAttributes(niobium_vis);
+  */
+
 
 
 
@@ -376,7 +376,7 @@ void RISQTutorialCornerFluxLine::ConstructCornerFluxLine(G4RotationMatrix * pRot
   */
 
 
-  
+
 
 }
 
