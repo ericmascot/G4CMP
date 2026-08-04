@@ -131,7 +131,7 @@ void RISQTutorialDetectorConstruction::DefineMaterials()
 
   fLiquidHelium = nistManager->FindOrBuildMaterial("G4_AIR"); // to be corrected
   fGermanium = nistManager->FindOrBuildMaterial("G4_Ge");
-  fSilicon = nistManager->FindOrBuildMaterial("G4_Si");
+  fSilicon = nistManager->FindOrBuildMaterial("G4_ALUMINUM_OXIDE");
   fAluminum = nistManager->FindOrBuildMaterial("G4_Al");
   fTungsten = nistManager->FindOrBuildMaterial("G4_W");
   fNiobium = nistManager->FindOrBuildMaterial("G4_Nb");
@@ -236,7 +236,7 @@ void RISQTutorialDetectorConstruction::SetupGeometry()
   // Set up the G4CMP silicon lattice information using the G4LatticeManager
   //  G4LatticeManager gives physics processes access to lattices by volume
   G4LatticeManager *LM = G4LatticeManager::GetLatticeManager();
-  G4LatticeLogical *log_siliconLattice = LM->LoadLattice(fSilicon, "Si");
+  G4LatticeLogical *log_siliconLattice = LM->LoadLattice(fSilicon, "Al2O3");
 
   // G4LatticePhysical assigns G4LatticeLogical a physical orientation
   G4LatticePhysical *phys_siliconLattice = new G4LatticePhysical(log_siliconLattice);
