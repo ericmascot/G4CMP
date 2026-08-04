@@ -11,13 +11,19 @@ stiffness 4 4  147.7 GPa
 stiffness 6 6  166.7 GPa
 # Phonon parameters
 dyn -27.02 -152.8 139.8 166.24 GPa #Simulating Phonon Propagation in New Materials(Working on the Paper)
-scat 0.025e-42 s3 #Sapphire # DOI:https://doi.org/10.1016/S0921-4526(02)00581-1
+scat 0.04e-42 s3 #Sapphire # DOI:https://doi.org/10.1016/S0921-4526(02)00581-1
 decay 12.7e-55 s4 #Decay Rate Sapphire #Simulating Phonon Propagation in New Materials(Working on the Paper)
 decayTT 0.67
 LDOS 0.137
 STDOS 0.511
 FTDOS 0.351
-Debye 8.41 THz 
+Debye 8.41 THz
 vsound 11200.0 m/s	# Longitudinal sound speed DOI:https://doi.org/10.1103/PhysRevB.29.2190
 vtrans 6040.0 m/s	# Transverse sound speed DOI:https://doi.org/10.1103/PhysRevB.29.2190
-
+# Charge carrier parameters
+bandgap 9.9 eV      # https://doi.org/10.1088/1748-0221/10/08/P08008
+pairEnergy 27 eV    # https://doi.org/10.1088/1748-0221/10/08/P08008
+fanoFactor 0.382    # Using diamond as guess https://doi.org/10.1002/pssa.201600195
+hmass 6.3           # https://doi.org/10.1134/S0021364007030071
+emass 0.4 0.4 0.4   # https://doi.org/10.1134/S0021364007030071
+valleyDir 0 0 0
