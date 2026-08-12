@@ -14,7 +14,7 @@ dyn -27.02 -152.8 139.8 166.24 GPa #Simulating Phonon Propagation in New Materia
 scat 0.04e-42 s3 #Sapphire # DOI:https://doi.org/10.1016/S0921-4526(02)00581-1
 decay 12.7e-55 s4 #Decay Rate Sapphire #Simulating Phonon Propagation in New Materials(Working on the Paper)
 decayTT 0.67
-LDOS 0.137
+LDOS  0.137
 STDOS 0.511
 FTDOS 0.351
 Debye 8.41 THz
@@ -27,3 +27,19 @@ fanoFactor 0.382    # Using diamond as guess https://doi.org/10.1002/pssa.201600
 hmass 6.3           # https://doi.org/10.1134/S0021364007030071
 emass 0.4 0.4 0.4   # https://doi.org/10.1134/S0021364007030071
 valleyDir 0 0 0
+# Intervalley scattering (matrix elements) from Si
+alpha 0.5 /eV
+acDeform_e 9 eV         # Cabrera et al., arxiv(1004.1233), 2010
+acDeform_h 5 eV
+ivDeform 0.5e8 0.8e8 11e8 0.3e8 2e8 2e8 eV/cm           # Jacoboni & Reggiani
+ivEnergy 12.0e-3 18.4e-3 61.8e-3 18.9e-3 47.2e-3 58.8e-3 eV
+neutDens 1e11 /cm3
+epsilon 11.68
+# Intervalley scattering (Linear and Quadratic models) from Si
+ivModel Linear
+ivLinRate0  1.5e6 Hz    # Fitted to Stanford test devices
+ivLinRate1  1.5 Hz      # Fitted to Stanford test devices
+ivLinPower  4.0         # Rate = ivLinRate0 + ivLinRate1 * E^ivLinPower
+ivQuadRate  3.5e-20 Hz  # Fitted to Stanford test devices
+ivQuadField 3395 V/m    # Fitted to Stanford test divices
+ivQuadPower 7.47        # Rate = sqrt((E^2-QuadField^2)^ivPower)
