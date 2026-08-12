@@ -22,5 +22,5 @@ epositions.txt
 *__pycache__*
 .vscode
 # ignore in-source build/install directories
-build/
+build*/
 install/
