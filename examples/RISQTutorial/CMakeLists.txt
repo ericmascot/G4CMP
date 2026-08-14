@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.12)
 project(RISQTutorial)
 set(CMAKE_CXX_STANDARD 17)
 
@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD 17)
 #
 set(CMAKE_PREFIX_PATH $ENV{G4CMPINSTALL}/../..)
 find_package(G4CMP REQUIRED)
-include(${G4CMP_USE_FILE})
 
 #----------------------------------------------------------------------------
 # Find Geant4 package
@@ -20,7 +19,7 @@ include($ENV{G4CMPINSTALL}/FindGeant4.cmake)
 # NOTE: Need to include G4CMP directories before G4.
 #
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${G4CMP_INCLUDE_DIRS})
+include_directories($ENV{G4CMPINCLUDE})
 include(${G4CMP_USE_FILE})
 include(${Geant4_USE_FILE})
 
